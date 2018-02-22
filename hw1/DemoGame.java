@@ -22,6 +22,8 @@ public class DemoGame {
 	
 	// Useful variables
 	private static int currentFrameTex;
+	private static int worldWidth;
+	private static int worldHeight;
 	
 	// Camera
 	private static Camera camera = new Camera(0, 0);
@@ -29,13 +31,11 @@ public class DemoGame {
 	private static int[] tileSize = new int[2];
 
 	// Declare backgrounds
-	private static int worldWidth;
-	private static int worldHeight;
-	
 	private static Background backgroundGrass;
 	
 	// Declare Sprites
 	// Background 
+	
 	private static int backgroundGrassTex;
 	private static int backgroundWaterTex;
 	private static int backgroundTreeTex;
@@ -78,7 +78,7 @@ public class DemoGame {
 		// Create the window and OpenGL context.
 		GLWindow window = GLWindow.create(new GLCapabilities(gl2Profile));
 		window.setSize(800/2, 600/2);
-		window.setTitle("HW2");
+		window.setTitle("HW3");
 		window.setVisible(true);
 		window.setDefaultCloseOperation(WindowClosingProtocol.WindowClosingMode.DISPOSE_ON_CLOSE);
 		window.addKeyListener(new KeyListener() {
@@ -112,22 +112,29 @@ public class DemoGame {
 		// Game initialization goes here.
 		
 		
-		// Initialization of Sprites
+		// Initialization of backgroundTextures
 		
 		backgroundGrassTex = glTexImageTGAFile(gl, "data/grass.tga", tileSize);
 		backgroundWaterTex = glTexImageTGAFile(gl, "data/water.tga", tileSize);
-		backgroundTreeTex = glTexImageTGAFile(gl, "data/trees.tga", tileSize);
+		backgroundTreeTex = glTexImageTGAFile(gl, "data/wall.tga", tileSize);
 		//spriteTex = glTexImageTGAFile(gl, "charOne.tga", spriteSize); 
 		//fireTex = glTexImageTGAFile(gl, "fire.tga", fireSize);
 		
-		
+		int[] backgroundTextures = {
+				glTexImageTGAFile(gl, "data/grass.tga", tileSize),
+				glTexImageTGAFile(gl, "data/wall.tga", tileSize),
+				glTexImageTGAFile(gl, "data/water.tga", tileSize),
+				glTexImageTGAFile(gl, "data/sand1.tga", tileSize),
+				glTexImageTGAFile(gl, "data/sand2.tga", tileSize),
+				glTexImageTGAFile(gl, "data/lava.tga", tileSize)
+				};
 		
 //		backgroundGrass = new Background(backgroundGrassTex ,13, 11);
 //		backgroundGrass.setImage(backgroundTreeTex, 68, 76);	
 //		backgroundGrass.setImage(backgroundWaterTex, 78, 131);
-		backgroundGrass = new Background(backgroundGrassTex ,30, 30);
-		backgroundGrass.setImage(backgroundTreeTex, 68, 76);
-		backgroundGrass.setImage(backgroundWaterTex, 78, 131);
+		backgroundGrass = new Background(backgroundTextures ,30, 30);
+//		backgroundGrass.setImage(backgroundTreeTex, 68, 76);
+//		backgroundGrass.setImage(backgroundWaterTex, 78, 131);
 		
 		// make a method after in BackGround
 		worldWidth = 64 * 30;
@@ -256,13 +263,12 @@ public class DemoGame {
 			}
 			
 			// move camera
+			velocity = velocity * 4;
 			// move up
 			if (kbState[KeyEvent.VK_UP]) {
 				camera.setY(camera.getY() - velocity);
 				if (camera.getY() < 0)
 					camera.setY(0);
-				System.out.println(camera.getY());
-
 			}
 			// move down
 			else if (kbState[KeyEvent.VK_DOWN]) 
@@ -270,7 +276,6 @@ public class DemoGame {
 				camera.setY(camera.getY() + velocity);
 				if (camera.getY() + 1 > tileSize[1] * backgroundGrass.getHeight() - 600) 
 					camera.setY(tileSize[1] * backgroundGrass.getHeight() - 600);
-				System.out.println(camera.getY());
 			}
 			// move left
 			else if (kbState[KeyEvent.VK_LEFT]) 
@@ -278,7 +283,6 @@ public class DemoGame {
 				camera.setX(camera.getX() - velocity);
 				if (camera.getX() - 1 < 0)
 					camera.setX(0);
-				System.out.println(camera.getX());
 			}
 			// move right
 			else if (kbState[KeyEvent.VK_RIGHT]) 
@@ -286,7 +290,6 @@ public class DemoGame {
 				camera.setX(camera.getX() + velocity);
 				if (camera.getX() > tileSize[0] * backgroundGrass.getWidth() - 800) 
 					camera.setX(tileSize[0] * backgroundGrass.getWidth() - 800);
-				System.out.println(camera.getX());
 			}
 			
 
@@ -300,24 +303,27 @@ public class DemoGame {
 			// Draw background(s)
 			for (int i = 0; i < backgroundGrass.getWidth(); i++) {
 				for (int j = 0; j < backgroundGrass.getHeight(); j++) {
-					if (backgroundGrass.getTile(i, j) != null) {
-						int tileX = i * tileSize[0];
-						int tileY = j * tileSize[1];
-						glDrawSprite(gl, backgroundGrass.getTile(i, j).getImage(), tileX - camera.getX(), tileY - camera.getY(),
-								tileSize[0], tileSize[1]);
-					}
+
+					int tileX = i * tileSize[0];
+					int tileY = j * tileSize[1];
+					glDrawSprite(gl, backgroundGrass.getTile(i, j), tileX - camera.getX(), tileY - camera.getY(),
+							tileSize[0], tileSize[1]);
 				}
 			}
-		
+
+			//
 			// Draw sprites
-			glDrawSprite(gl, fireAnimation.getCurrentFrame(), firePos[0] - camera.getX(), firePos[1] - camera.getY(), fireSize[0], fireSize[1]);
-			glDrawSprite(gl, boarAnimation.getCurrentFrame(), boarPos[0] - camera.getX(), boarPos[1] - camera.getY(), boarSize[0], boarSize[1]);
-			glDrawSprite(gl, currentFrameTex, spritePos[0] - camera.getX(), spritePos[1] - camera.getY() , spriteSizeMoving[0], spriteSizeMoving[1]);
-			
-			// Present to the player.
-			// window.swapBuffers();
+			glDrawSprite(gl, fireAnimation.getCurrentFrame(), firePos[0] - camera.getX(), firePos[1] - camera.getY(),
+					fireSize[0], fireSize[1]);
+			glDrawSprite(gl, boarAnimation.getCurrentFrame(), boarPos[0] - camera.getX(), boarPos[1] - camera.getY(),
+					boarSize[0], boarSize[1]);
+			glDrawSprite(gl, currentFrameTex, spritePos[0] - camera.getX(), spritePos[1] - camera.getY(),
+					spriteSizeMoving[0], spriteSizeMoving[1]);
 		}
+		// Present to the player.
+		// window.swapBuffers();
 	}
+
 //	
 //	public static int backgroundInBounds(float f, float g) {
 //
