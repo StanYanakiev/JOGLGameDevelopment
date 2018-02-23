@@ -35,7 +35,7 @@ public class DemoGame {
 	
 	// Declare Sprites
 	// Shinjou
-	private static float[] spritePos = new float[] { 640, 260 };
+	private static float[] spritePos = new float[] { 320, 235 };
 	private static int[] spriteSizeIdle = new int[2];
 	private static int[] spriteSizeMoving = new int[2];
 	
@@ -210,7 +210,9 @@ public class DemoGame {
 			}
 			
 			float velocity =  250 * ((float) deltaTimeMS / 1000);
-			//System.out.println(velocity);
+//			System.out.println("Idle: " + spriteSizeIdle[0] + " , " + spriteSizeIdle[1]);
+//			System.out.println("Moving: " + spriteSizeMoving[0] + " , " + spriteSizeMoving[1]);
+			
 		
 			// move up
 			if (kbState[KeyEvent.VK_W]) {
@@ -220,6 +222,10 @@ public class DemoGame {
 				moveRightAnimation.updateSprite(deltaTimeMS);
 				currentFrameTex =  moveRightAnimation.getCurrentFrame();
 			
+				if (spritePos[1] < worldHeight - 365)
+					camera.setY(spritePos[1] - 235);
+				if (camera.getY() < 0)
+					camera.setY(0);
 			}
 
 			// move down
@@ -229,6 +235,11 @@ public class DemoGame {
 					spritePos[1] = worldHeight - spriteSizeMoving[1];
 				moveLeftAnimation.updateSprite(deltaTimeMS);
 				currentFrameTex =  moveLeftAnimation.getCurrentFrame();
+				
+				if(spritePos[1] > 235)
+					camera.setY(spritePos[1] - 235);
+				if (camera.getY() + 1 > tileSize[1] * backgroundGrass.getHeight() - 600) 
+					camera.setY(tileSize[1] * backgroundGrass.getHeight() - 600);
 			}
 			// move left
 			else if (kbState[KeyEvent.VK_A]) {
@@ -237,6 +248,12 @@ public class DemoGame {
 					spritePos[0] = 0;
 				moveLeftAnimation.updateSprite(deltaTimeMS);
 				currentFrameTex =  moveLeftAnimation.getCurrentFrame();	
+				
+				if (spritePos[0] < worldWidth - 480)
+					camera.setX(spritePos[0] - 320);
+
+				if (camera.getX() - 1 < 0)
+					camera.setX(0);
 			}
 			// move right
 			else if (kbState[KeyEvent.VK_D]) {
@@ -245,6 +262,11 @@ public class DemoGame {
 					spritePos[0] = worldWidth - spriteSizeMoving[0];
 				moveRightAnimation.updateSprite(deltaTimeMS);
 				currentFrameTex =  moveRightAnimation.getCurrentFrame();
+				
+				if(spritePos[0] > 320)
+					camera.setX(spritePos[0] - 320);
+				if (camera.getX() > tileSize[0] * backgroundGrass.getWidth() - 800) 
+					camera.setX(tileSize[0] * backgroundGrass.getWidth() - 800);
 			}
 			else 
 			{
