@@ -34,11 +34,6 @@ public class DemoGame {
 	private static Background backgroundGrass;
 	
 	// Declare Sprites
-	// Background 
-	
-	private static int backgroundGrassTex;
-	private static int backgroundWaterTex;
-	private static int backgroundTreeTex;
 	// Shinjou
 	private static float[] spritePos = new float[] { 640, 260 };
 	private static int[] spriteSizeIdle = new int[2];
@@ -114,11 +109,6 @@ public class DemoGame {
 		
 		// Initialization of backgroundTextures
 		
-		backgroundGrassTex = glTexImageTGAFile(gl, "data/grass.tga", tileSize);
-		backgroundWaterTex = glTexImageTGAFile(gl, "data/water.tga", tileSize);
-		backgroundTreeTex = glTexImageTGAFile(gl, "data/wall.tga", tileSize);
-		//spriteTex = glTexImageTGAFile(gl, "charOne.tga", spriteSize); 
-		//fireTex = glTexImageTGAFile(gl, "fire.tga", fireSize);
 		
 		int[] backgroundTextures = {
 				glTexImageTGAFile(gl, "data/grass.tga", tileSize),
@@ -460,7 +450,7 @@ public class DemoGame {
 			
 		}
 		else
-			pos[0] = 799 - boarSize[0];
+			pos[0] = worldWidth - boarSize[0];
 	}
 }
 
