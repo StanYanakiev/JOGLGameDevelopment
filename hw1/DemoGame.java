@@ -24,9 +24,13 @@ public class DemoGame {
 	private static int currentFrameTex;
 	private static int worldWidth;
 	private static int worldHeight;
+	private static int screenX = 800;
+	private static int screenY = 600;
+	
 	
 	// Camera
 	private static Camera camera = new Camera(0, 0);
+	private static Camera camera2 = new Camera(0,0);
 	// Tile
 	private static int[] tileSize = new int[2];
 
@@ -72,7 +76,7 @@ public class DemoGame {
 
 		// Create the window and OpenGL context.
 		GLWindow window = GLWindow.create(new GLCapabilities(gl2Profile));
-		window.setSize(800/2, 600/2);
+		window.setSize(screenX/2, screenY/2);
 		window.setTitle("HW3");
 		window.setVisible(true);
 		window.setDefaultCloseOperation(WindowClosingProtocol.WindowClosingMode.DISPOSE_ON_CLOSE);
@@ -97,18 +101,15 @@ public class DemoGame {
 		// Setup OpenGL state.
 		window.getContext().makeCurrent();
 		GL2 gl = window.getGL().getGL2();
-		gl.glViewport(0, 0, 800, 600);
+		gl.glViewport(0, 0, screenX, screenY);
 		gl.glMatrixMode(GL2.GL_PROJECTION);
-		gl.glOrtho(0, 800, 600, 0, 0, 100);
+		gl.glOrtho(0, screenX, screenY, 0, 0, 100);
 		gl.glEnable(GL2.GL_TEXTURE_2D);
 		gl.glEnable(GL2.GL_BLEND);
 		gl.glBlendFunc(GL2.GL_SRC_ALPHA, GL2.GL_ONE_MINUS_SRC_ALPHA);
 
 		// Game initialization goes here.
-		
-		
 		// Initialization of backgroundTextures
-		
 		
 		int[] backgroundTextures = {
 				glTexImageTGAFile(gl, "data/grass.tga", tileSize),
@@ -119,20 +120,12 @@ public class DemoGame {
 				glTexImageTGAFile(gl, "data/lava.tga", tileSize)
 				};
 		
-//		backgroundGrass = new Background(backgroundGrassTex ,13, 11);
-//		backgroundGrass.setImage(backgroundTreeTex, 68, 76);	
-//		backgroundGrass.setImage(backgroundWaterTex, 78, 131);
 		backgroundGrass = new Background(backgroundTextures ,30, 30);
-//		backgroundGrass.setImage(backgroundTreeTex, 68, 76);
-//		backgroundGrass.setImage(backgroundWaterTex, 78, 131);
 		
 		// make a method after in BackGround
 		worldWidth = 64 * 30;
 		worldHeight = 64 * 30;
-				
-		
-		
-		
+
 		// Animation Texture
 		AnimationFrame[] idle = {
 				new AnimationFrame(glTexImageTGAFile(gl, "data/charIdle1.tga", spriteSizeIdle), (float) 500),
@@ -176,8 +169,10 @@ public class DemoGame {
 		boarAnimation = new Animation(boar);
 
 		// Create a bounding box camera for both the monkey and camera
-		AABBCamera spriteAABB = new AABBCamera(spritePos[0], spritePos[1], spriteSizeIdle[0], spriteSizeIdle	[1]);
-		AABBCamera cameraAABB = new AABBCamera(camera.getX(), camera.getY(), 600, 800);
+		AABBCamera spriteAABB = new AABBCamera(spritePos[0], spritePos[1], spriteSizeIdle[0], spriteSizeIdle[1]);
+		AABBCamera fireAABB = new AABBCamera(firePos[0], firePos[1], fireSize[0], fireSize[1]);
+		AABBCamera boarAABB = new AABBCamera(boarPos[0], boarPos[1], boarSize[0], boarSize[1]);
+		AABBCamera cameraAABB = new AABBCamera(camera.getX(), camera.getY(), screenX, screenY);
 		// The game loop
 		long lastFrameNS;
 		long curFrameNS = System.nanoTime();
@@ -209,19 +204,19 @@ public class DemoGame {
 				shouldExit = true;
 			}
 			
-			float velocity =  250 * ((float) deltaTimeMS / 1000);
+		
 //			System.out.println("Idle: " + spriteSizeIdle[0] + " , " + spriteSizeIdle[1]);
 //			System.out.println("Moving: " + spriteSizeMoving[0] + " , " + spriteSizeMoving[1]);
 			
-		
+			float velocity =  250 * ((float) deltaTimeMS / 1000);
 			// move up
 			if (kbState[KeyEvent.VK_W]) {
 				spritePos[1] -= velocity;
-				if (spritePos[1] < 0) 
+				if (spritePos[1] < 0)
 					spritePos[1] = 0;
 				moveRightAnimation.updateSprite(deltaTimeMS);
-				currentFrameTex =  moveRightAnimation.getCurrentFrame();
-			
+				currentFrameTex = moveRightAnimation.getCurrentFrame();
+
 				if (spritePos[1] < worldHeight - 365)
 					camera.setY(spritePos[1] - 235);
 				if (camera.getY() < 0)
@@ -229,26 +224,26 @@ public class DemoGame {
 			}
 
 			// move down
-			else if (kbState[KeyEvent.VK_S] ) {
+			else if (kbState[KeyEvent.VK_S]) {
 				spritePos[1] += velocity;
-				if(spritePos[1] > (worldHeight - spriteSizeMoving[1]))
+				if (spritePos[1] > (worldHeight - spriteSizeMoving[1]))
 					spritePos[1] = worldHeight - spriteSizeMoving[1];
 				moveLeftAnimation.updateSprite(deltaTimeMS);
-				currentFrameTex =  moveLeftAnimation.getCurrentFrame();
-				
-				if(spritePos[1] > 235)
+				currentFrameTex = moveLeftAnimation.getCurrentFrame();
+
+				if (spritePos[1] > 235)
 					camera.setY(spritePos[1] - 235);
-				if (camera.getY() + 1 > tileSize[1] * backgroundGrass.getHeight() - 600) 
+				if (camera.getY() + 1 > tileSize[1] * backgroundGrass.getHeight() - 600)
 					camera.setY(tileSize[1] * backgroundGrass.getHeight() - 600);
 			}
 			// move left
 			else if (kbState[KeyEvent.VK_A]) {
 				spritePos[0] -= velocity;
-				if(spritePos[0] < 0)
+				if (spritePos[0] < 0)
 					spritePos[0] = 0;
 				moveLeftAnimation.updateSprite(deltaTimeMS);
-				currentFrameTex =  moveLeftAnimation.getCurrentFrame();	
-				
+				currentFrameTex = moveLeftAnimation.getCurrentFrame();
+
 				if (spritePos[0] < worldWidth - 480)
 					camera.setX(spritePos[0] - 320);
 
@@ -258,22 +253,20 @@ public class DemoGame {
 			// move right
 			else if (kbState[KeyEvent.VK_D]) {
 				spritePos[0] += velocity;
-				if(spritePos[0] > (worldWidth - spriteSizeMoving[0]))
+				if (spritePos[0] > (worldWidth - spriteSizeMoving[0]))
 					spritePos[0] = worldWidth - spriteSizeMoving[0];
 				moveRightAnimation.updateSprite(deltaTimeMS);
-				currentFrameTex =  moveRightAnimation.getCurrentFrame();
-				
-				if(spritePos[0] > 320)
+				currentFrameTex = moveRightAnimation.getCurrentFrame();
+
+				if (spritePos[0] > 320)
 					camera.setX(spritePos[0] - 320);
-				if (camera.getX() > tileSize[0] * backgroundGrass.getWidth() - 800) 
-					camera.setX(tileSize[0] * backgroundGrass.getWidth() - 800);
-			}
-			else 
-			{
+				if (camera.getX() > tileSize[0] * backgroundGrass.getWidth() - screenX)
+					camera.setX(tileSize[0] * backgroundGrass.getWidth() - screenX);
+			} else {
 				idleAnimation.updateSprite(deltaTimeMS);
-				currentFrameTex= idleAnimation.getCurrentFrame();
+				currentFrameTex = idleAnimation.getCurrentFrame();
 			}
-			
+
 			// move camera
 			velocity = velocity * 4;
 			// move up
@@ -283,39 +276,55 @@ public class DemoGame {
 					camera.setY(0);
 			}
 			// move down
-			else if (kbState[KeyEvent.VK_DOWN]) 
-			{
+			else if (kbState[KeyEvent.VK_DOWN]) {
 				camera.setY(camera.getY() + velocity);
-				if (camera.getY() + 1 > tileSize[1] * backgroundGrass.getHeight() - 600) 
-					camera.setY(tileSize[1] * backgroundGrass.getHeight() - 600);
+				if (camera.getY() + 1 > tileSize[1] * backgroundGrass.getHeight() - screenY)
+					camera.setY(tileSize[1] * backgroundGrass.getHeight() - screenY);
 			}
 			// move left
-			else if (kbState[KeyEvent.VK_LEFT]) 
-			{
+			else if (kbState[KeyEvent.VK_LEFT]) {
 				camera.setX(camera.getX() - velocity);
 				if (camera.getX() - 1 < 0)
 					camera.setX(0);
 			}
 			// move right
-			else if (kbState[KeyEvent.VK_RIGHT]) 
-			{
+			else if (kbState[KeyEvent.VK_RIGHT]) {
 				camera.setX(camera.getX() + velocity);
-				if (camera.getX() > tileSize[0] * backgroundGrass.getWidth() - 800) 
-					camera.setX(tileSize[0] * backgroundGrass.getWidth() - 800);
+				if (camera.getX() > tileSize[0] * backgroundGrass.getWidth() - screenX)
+					camera.setX(tileSize[0] * backgroundGrass.getWidth() - screenX);
 			}
 			
-
-			
-
 			gl.glClearColor(0, 0, 0, 1);
 			gl.glClear(GL2.GL_COLOR_BUFFER_BIT);
 
-			//int check = backgroundInBounds(camera.getX(), camera.getY());
+			// Update The AABB
+			spriteAABB.setX(spritePos[0]);
+			spriteAABB.setY(spritePos[1]);
 			
-			// Draw background(s)
-			for (int i = 0; i < backgroundGrass.getWidth(); i++) {
-				for (int j = 0; j < backgroundGrass.getHeight(); j++) {
+			fireAABB.setX(firePos[0]);
+			fireAABB.setY(firePos[1]);
+			
+			boarAABB.setX(boarPos[0]);
+			boarAABB.setY(boarPos[1]);
 
+			cameraAABB.setX(camera.getX());
+			cameraAABB.setY(camera.getY());
+
+			// System.out.println("x : " + camera.getX() + " || y: " + camera.getY());
+			// Find Tiles In Camera
+			
+			int startX = (int) (camera.getX() / 64);
+			int endX = (int) (camera.getX() + (screenX - 1)) / 64; 
+			
+			int startY = (int) (camera.getY() / 64);
+			int endY = (int) (camera.getY() + (screenY - 1)) / 64;
+			
+			System.out.println("startX : " + startX + " || endX: " + endX);
+			System.out.println("startY : " + startY + " || endY: " + endY);
+
+			// Draw background(s)
+			for (int i = startX; i <= endX; i++) {
+				for (int j = startY; j <= endY; j++) {					
 					int tileX = i * tileSize[0];
 					int tileY = j * tileSize[1];
 					glDrawSprite(gl, backgroundGrass.getTile(i, j), tileX - camera.getX(), tileY - camera.getY(),
@@ -323,25 +332,41 @@ public class DemoGame {
 				}
 			}
 
-			//
 			// Draw sprites
-			glDrawSprite(gl, fireAnimation.getCurrentFrame(), firePos[0] - camera.getX(), firePos[1] - camera.getY(),
-					fireSize[0], fireSize[1]);
-			glDrawSprite(gl, boarAnimation.getCurrentFrame(), boarPos[0] - camera.getX(), boarPos[1] - camera.getY(),
-					boarSize[0], boarSize[1]);
-			glDrawSprite(gl, currentFrameTex, spritePos[0] - camera.getX(), spritePos[1] - camera.getY(),
-					spriteSizeMoving[0], spriteSizeMoving[1]);
+			
+			if (AABBIntersect(cameraAABB, fireAABB))
+				glDrawSprite(gl, fireAnimation.getCurrentFrame(), firePos[0] - camera.getX(),
+						firePos[1] - camera.getY(), fireSize[0], fireSize[1]);
+			if (AABBIntersect(cameraAABB, boarAABB))
+				glDrawSprite(gl, boarAnimation.getCurrentFrame(), boarPos[0] - camera.getX(),
+						boarPos[1] - camera.getY(), boarSize[0], boarSize[1]);
+			if (AABBIntersect(cameraAABB, spriteAABB))
+				glDrawSprite(gl, currentFrameTex, spritePos[0] - camera.getX(), spritePos[1] - camera.getY(),
+						spriteSizeMoving[0], spriteSizeMoving[1]);
 		}
 		// Present to the player.
 		// window.swapBuffers();
 	}
 
-//	
-//	public static int backgroundInBounds(float f, float g) {
-//
-//		return (int) ((g / tileSize[1]) * 11 + (f / tileSize[0]));
-//	}
-
+	static boolean AABBIntersect(AABBCamera box1, AABBCamera box2) {
+		// box1 to the right
+		if (box1.getX() > box2.getX() + box2.getWidth()) {
+			return false;
+		}
+		// box1 to the left
+		if (box1.getX() + box1.getWidth() < box2.getX()) {
+			return false;
+		}
+		// box1 below
+		if (box1.getY() > box2.getY() + box2.getHeight()) {
+			return false;
+		}
+		// box1 above
+		if (box1.getY() + box1.getHeight() < box2.getY()) {
+			return false;
+		}
+		return true;
+	}
 
 	// Load a file into an OpenGL texture and return that texture.
 	public static int glTexImageTGAFile(GL2 gl, String filename, int[] out_size) {
@@ -460,12 +485,11 @@ public class DemoGame {
 			else
 				fireDir = !fireDir;
 		}
-
 	}
 	
 	public static void hunt2(long deltaTimeMS , int[] pos) 
 	{
-		float v = 300 * ((float) deltaTimeMS / 1000);
+		float v = 300 * (deltaTimeMS / 1000);
 		if(pos[0] > 0)
 		{
 			pos[0] -= v;
