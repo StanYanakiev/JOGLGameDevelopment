@@ -31,6 +31,7 @@ public class DemoGame {
 
 	// Tile
 	private static int[] tileSize = new int[2];
+	private static int[] enemySize = new int[2];
 
 	// Declare backgrounds
 	private static Background backgroundGrass;
@@ -79,7 +80,7 @@ public class DemoGame {
 		// Create the window and OpenGL context.
 		GLWindow window = GLWindow.create(new GLCapabilities(gl2Profile));
 		window.setSize(screenX / 2, screenY / 2);
-		window.setTitle("HW3");
+		window.setTitle("HW5");
 		window.setVisible(true);
 		window.setDefaultCloseOperation(WindowClosingProtocol.WindowClosingMode.DISPOSE_ON_CLOSE);
 		window.addKeyListener(new KeyListener() {
@@ -125,9 +126,10 @@ public class DemoGame {
 		worldHeight = 64 * 30;
 		
 		// Enemy and projectile texture
-		int slimeYellow = glTexImageTGAFile(gl, "data/slimeYellow.tga", tileSize);
+		int slimeGreen = glTexImageTGAFile(gl, "data/slimeGreen.tga", enemySize);
+		int slimeYellow = glTexImageTGAFile(gl, "data/slimeYellow.tga", enemySize);
 		int projectile = glTexImageTGAFile(gl, "data/projectile.tga", projectileSize);
-		int slimeGreen = glTexImageTGAFile(gl, "data/slimeGreen.tga", tileSize);
+	
 
 		// Animation Texture
 		AnimationFrame[] idle = {
@@ -240,10 +242,6 @@ public class DemoGame {
 				shouldExit = true;
 			}
 
-			// System.out.println("Idle: " + spriteSizeIdle[0] + " , " + spriteSizeIdle[1]);
-			// System.out.println("Moving: " + spriteSizeMoving[0] + " , " +
-			// spriteSizeMoving[1]);
-
 			float velocity = 250 * ((float) deltaTimeMS / 1000);
 			//
 			// Shinjou Movement
@@ -301,8 +299,6 @@ public class DemoGame {
 			int endX = (int) (camera.getX() + (screenX - 1)) / 64;
 			int startY = (int) (camera.getY() / 64);
 			int endY = (int) (camera.getY() + (screenY - 1)) / 64;
-			// System.out.println("startX : " + startX + " || endX: " + endX);
-			// System.out.println("startY : " + startY + " || endY: " + endY);
 
 			// Draw background(s)
 			for (int i = startX; i <= endX; i++) {
@@ -327,8 +323,7 @@ public class DemoGame {
 				glDrawSprite(gl, shinjou.getCurrentTexture(), spritePos[0] - camera.getX(),
 						spritePos[1] - camera.getY(), spriteSizeMoving[0], spriteSizeMoving[1]);
 			}
-			// projectilePos[0] = spritePos[0];
-			// projectilePos[1] = spritePos[1];
+		
 			for (int i = 0; i < projList.size(); i++) {
 				//if (AABBIntersect(cameraAABB, projList.get(i).getCollisionBox()))
 				glDrawSprite(gl, projectile, projList.get(i).getX() - camera.getX(),
@@ -494,7 +489,7 @@ public class DemoGame {
 	public static void characterMove(float velocity, long deltaTimeMS) {
 		// move up
 		if (kbState[KeyEvent.VK_W]) {
-			// Tile tile = backgroundGrass.getTile(spritePos[0] / 64, spritePos[1] / 64);
+			
 			spritePos[1] -= velocity;
 			if (spritePos[1] < 0)
 				spritePos[1] = 0;

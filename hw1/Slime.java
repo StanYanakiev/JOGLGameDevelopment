@@ -6,7 +6,7 @@ public class Slime extends Character{
 	public Slime(float x, float y, int width, int height, int tex) {
 		super(x, y, width, height, tex);
 		health = 2;
-		// TODO Auto-generated constructor stub
+		
 	}
 	
 	public int getHealth() {
@@ -20,4 +20,5 @@ public class Slime extends Character{
 	public void decHealth() {
 		health -= 1;
 	}
+
 }
