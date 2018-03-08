@@ -63,7 +63,6 @@ public class DemoGame {
 	private static boolean fireDir = true;
 	// Projectile
 	private static int[] projectileSize = new int[2];
-	private static float[] projectilePos = new float[2];
 
 	public static void main(String[] args) {
 		GLProfile gl2Profile;
@@ -124,6 +123,8 @@ public class DemoGame {
 		// make a method after in BackGround
 		worldWidth = 64 * 30;
 		worldHeight = 64 * 30;
+		
+		// Enemy and projectile texture
 		int slimeYellow = glTexImageTGAFile(gl, "data/slimeYellow.tga", tileSize);
 		int projectile = glTexImageTGAFile(gl, "data/projectile.tga", projectileSize);
 		int slimeGreen = glTexImageTGAFile(gl, "data/slimeGreen.tga", tileSize);
@@ -276,7 +277,6 @@ public class DemoGame {
 						projList.remove(i);
 					} else
 						projList.get(i).update(velocity * 2);
-
 				}
 			}
 
@@ -330,13 +330,14 @@ public class DemoGame {
 			// projectilePos[0] = spritePos[0];
 			// projectilePos[1] = spritePos[1];
 			for (int i = 0; i < projList.size(); i++) {
-				// if (AABBIntersect(cameraAABB, projList.get(i).getCollisionBox()))
+				//if (AABBIntersect(cameraAABB, projList.get(i).getCollisionBox()))
 				glDrawSprite(gl, projectile, projList.get(i).getX() - camera.getX(),
 						projList.get(i).getY() - camera.getY(), projectileSize[0], projectileSize[1]);
 			}
 
 			for (int i = 0; i < enemies.size(); i++) {
-				glDrawSprite(gl, enemies.get(i).getCurrentTexture(), enemies.get(i).getX() - camera.getX(),
+				//if (AABBIntersect(cameraAABB, enemies.get(i).getCollisionBox()))
+					glDrawSprite(gl, enemies.get(i).getCurrentTexture(), enemies.get(i).getX() - camera.getX(),
 						enemies.get(i).getY() - camera.getY(), tileSize[0], tileSize[1]);
 			}
 		}
