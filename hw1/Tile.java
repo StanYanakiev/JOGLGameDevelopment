@@ -2,7 +2,7 @@ package hw1;
 
 public class Tile {
 	int image;
-	boolean collision = true;
+	boolean collision;
 	AABBCamera box;
 		
 	public Tile(int image, boolean collision) {

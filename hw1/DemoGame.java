@@ -25,6 +25,8 @@ public class DemoGame {
 	private static int worldHeight;
 	private static int screenX = 800;
 	private static int screenY = 600;
+	
+	private static int projDir = 1;
 
 	// Camera
 	private static Camera camera = new Camera(0, 0);
@@ -55,7 +57,7 @@ public class DemoGame {
 
 	// Fire
 	// private static int fireTex;
-	private static int[] firePos = new int[] { 0, 480 };
+	private static int[] firePos = new int[] { 200, 380 };
 	private static int[] fireSize = new int[2];
 	// Boar
 	private static int[] boarSize = new int[2];
@@ -80,7 +82,7 @@ public class DemoGame {
 		// Create the window and OpenGL context.
 		GLWindow window = GLWindow.create(new GLCapabilities(gl2Profile));
 		window.setSize(screenX / 2, screenY / 2);
-		window.setTitle("HW5");
+		window.setTitle("HW6");
 		window.setVisible(true);
 		window.setDefaultCloseOperation(WindowClosingProtocol.WindowClosingMode.DISPOSE_ON_CLOSE);
 		window.addKeyListener(new KeyListener() {
@@ -117,7 +119,9 @@ public class DemoGame {
 		int[] backgroundTextures = { glTexImageTGAFile(gl, "data/grass.tga", tileSize),
 				glTexImageTGAFile(gl, "data/wall.tga", tileSize), glTexImageTGAFile(gl, "data/water.tga", tileSize),
 				glTexImageTGAFile(gl, "data/sand1.tga", tileSize), glTexImageTGAFile(gl, "data/sand2.tga", tileSize),
-				glTexImageTGAFile(gl, "data/lava.tga", tileSize), glTexImageTGAFile(gl, "data/tile.tga", tileSize) };
+				glTexImageTGAFile(gl, "data/lava.tga", tileSize), glTexImageTGAFile(gl, "data/tile.tga", tileSize),
+				glTexImageTGAFile(gl, "data/house1.tga", tileSize), glTexImageTGAFile(gl, "data/house2.tga", tileSize),
+				glTexImageTGAFile(gl, "data/house3.tga", tileSize), glTexImageTGAFile(gl, "data/house4.tga", tileSize)};
 
 		backgroundGrass = new Background(backgroundTextures, 30, 30);
 
@@ -128,7 +132,7 @@ public class DemoGame {
 		// Enemy and projectile texture
 		int slimeGreen = glTexImageTGAFile(gl, "data/slimeGreen.tga", enemySize);
 		int slimeYellow = glTexImageTGAFile(gl, "data/slimeYellow.tga", enemySize);
-		int projectile = glTexImageTGAFile(gl, "data/projectile.tga", projectileSize);
+		int projectile = glTexImageTGAFile(gl, "data/orb.tga", projectileSize);
 	
 
 		// Animation Texture
@@ -136,21 +140,21 @@ public class DemoGame {
 				new AnimationFrame(glTexImageTGAFile(gl, "data/charIdle1.tga", spriteSizeIdle), (float) 500),
 				new AnimationFrame(glTexImageTGAFile(gl, "data/charIdle2.tga", spriteSizeIdle), (float) 500), };
 		AnimationFrame[] movingLeft = {
-				new AnimationFrame(glTexImageTGAFile(gl, "data/charLeftOne.tga", spriteSizeIdle), (float) 100),
-				new AnimationFrame(glTexImageTGAFile(gl, "data/charLeftTwo.tga", spriteSizeIdle), (float) 100),
-				new AnimationFrame(glTexImageTGAFile(gl, "data/charLeftThree.tga", spriteSizeIdle), (float) 100),
-				new AnimationFrame(glTexImageTGAFile(gl, "data/charLeftFour.tga", spriteSizeIdle), (float) 100),
-				new AnimationFrame(glTexImageTGAFile(gl, "data/charLeftFive.tga", spriteSizeIdle), (float) 100),
-				new AnimationFrame(glTexImageTGAFile(gl, "data/charLeftSix.tga", spriteSizeIdle), (float) 100),
-				new AnimationFrame(glTexImageTGAFile(gl, "data/charLeftTwo.tga", spriteSizeIdle), (float) 100), };
+				new AnimationFrame(glTexImageTGAFile(gl, "data/charLeftOne.tga", spriteSizeIdle), (float) 200),
+				new AnimationFrame(glTexImageTGAFile(gl, "data/charLeftTwo.tga", spriteSizeIdle), (float) 200),
+				new AnimationFrame(glTexImageTGAFile(gl, "data/charLeftThree.tga", spriteSizeIdle), (float) 200),
+				new AnimationFrame(glTexImageTGAFile(gl, "data/charLeftFour.tga", spriteSizeIdle), (float) 200),
+				new AnimationFrame(glTexImageTGAFile(gl, "data/charLeftFive.tga", spriteSizeIdle), (float) 200),
+				new AnimationFrame(glTexImageTGAFile(gl, "data/charLeftSix.tga", spriteSizeIdle), (float) 200),
+				new AnimationFrame(glTexImageTGAFile(gl, "data/charLeftTwo.tga", spriteSizeIdle), (float) 200), };
 		AnimationFrame[] movingRight = {
-				new AnimationFrame(glTexImageTGAFile(gl, "data/charRightOne.tga", spriteSizeMoving), (float) 100),
-				new AnimationFrame(glTexImageTGAFile(gl, "data/charRightTwo.tga", spriteSizeMoving), (float) 100),
-				new AnimationFrame(glTexImageTGAFile(gl, "data/charRightThree.tga", spriteSizeMoving), (float) 100),
-				new AnimationFrame(glTexImageTGAFile(gl, "data/charRightFour.tga", spriteSizeMoving), (float) 100),
-				new AnimationFrame(glTexImageTGAFile(gl, "data/charRightFive.tga", spriteSizeMoving), (float) 100),
-				new AnimationFrame(glTexImageTGAFile(gl, "data/charRightSix.tga", spriteSizeMoving), (float) 100),
-				new AnimationFrame(glTexImageTGAFile(gl, "data/charRightTwo.tga", spriteSizeMoving), (float) 100), };
+				new AnimationFrame(glTexImageTGAFile(gl, "data/charRightOne.tga", spriteSizeMoving), (float) 200),
+				new AnimationFrame(glTexImageTGAFile(gl, "data/charRightTwo.tga", spriteSizeMoving), (float) 200),
+				new AnimationFrame(glTexImageTGAFile(gl, "data/charRightThree.tga", spriteSizeMoving), (float) 200),
+				new AnimationFrame(glTexImageTGAFile(gl, "data/charRightFour.tga", spriteSizeMoving), (float) 200),
+				new AnimationFrame(glTexImageTGAFile(gl, "data/charRightFive.tga", spriteSizeMoving), (float) 200),
+				new AnimationFrame(glTexImageTGAFile(gl, "data/charRightSix.tga", spriteSizeMoving), (float) 200),
+				new AnimationFrame(glTexImageTGAFile(gl, "data/charRightTwo.tga", spriteSizeMoving), (float) 200), };
 		AnimationFrame[] fire = { new AnimationFrame(glTexImageTGAFile(gl, "data/fireOne.tga", fireSize), (float) 200),
 				new AnimationFrame(glTexImageTGAFile(gl, "data/fireTwo.tga", fireSize), (float) 200),
 				new AnimationFrame(glTexImageTGAFile(gl, "data/fireThree.tga", fireSize), (float) 200),
@@ -189,9 +193,9 @@ public class DemoGame {
 		long lastFrameNS;
 		long curFrameNS = System.nanoTime();
 
-		//// Physics runs at 100fps, or 10ms / physics frame
-		// int physicsDeltaMs = 10;
-		// int lastPhysicsFrameMs = 0;
+		// Physics runs at 100fps, or 10ms / physics frame
+		 int physicsDeltaMs = 10;
+		 int lastPhysicsFrameMs = 0;
 
 		while (!shouldExit) {
 			System.arraycopy(kbState, 0, kbPrevState, 0, kbState.length);
@@ -204,49 +208,68 @@ public class DemoGame {
 				break;
 			}
 
-			// Physics Update
-			// do {
-			// // 1. Physics movement
-			// // 2. Physics collision detection
-			// // 3. Physics collision resolution
-			//
-			// lastPhysicsFrameMs += physicsDeltaMs;
-			// } while (lastPhysicsFrameMs + physicsDeltaMs < curFrameNS );
-
-			for (int i = 0; i < shinjou.getProjectiles().size(); i++) {
-				for (int j = 0; j < enemies.size(); j++) {
-					if (AABBIntersect(shinjou.getProjectiles().get(i).getCollisionBox(),
-							enemies.get(j).getCollisionBox())) {
-						shinjou.getProjectiles().remove(i);
-						enemies.get(j).decHealth();
-						enemies.get(j).setCurrentTexture(slimeYellow);
-						if (enemies.get(j).getHealth() < 1) {
-							// enemies.get(j).setAlive(false);
-							enemies.remove(j);
-						}
-
-						if (shinjou.getProjectiles().size() == 0) {
-							break;
-						}
-						if (i > 0)
-							i--;
-
-					}
-				}
-			}
 			// Game logic goes here.
 			curFrameNS = System.nanoTime();
 			long deltaTimeMS = (curFrameNS - lastFrameNS) / 1000000;
+			float velocity = 150 * ((float) deltaTimeMS / 1000);
+
+			ArrayList<Projectile> projList = shinjou.getProjectiles();
+			// Physics Update
+			do {
+				// 1. Physics movement
+				// 2. Physics collision detection
+				// 3. Physics collision resolution
+
+				// Shinjou Movement
+				characterMove(velocity, deltaTimeMS);
+				
+
+
+				if (projList.size() > 0) {
+					for (int i = 0; i < projList.size(); i++) {
+						// System.out.println("proj: " + projList.get(i).getX());
+						Projectile proj = projList.get(i);
+						if (backgroundGrass.getTile((float) Math.floor((proj.getX() + proj.getWidth() / 2) / 64),
+								(float) Math.floor((proj.getY() + proj.getHeight() / 2) / 64)).getCollision())
+							projList.remove(i);
+
+						if (proj.getX() > worldWidth || proj.getX() < 0 || proj.getY() > worldHeight || proj.getY() < 0) {
+							projList.remove(i);
+						} else
+							proj.update(velocity * 2);
+					}
+				}
+				for (int i = 0; i < shinjou.getProjectiles().size(); i++) {
+					for (int j = 0; j < enemies.size(); j++) {
+						if (AABBIntersect(shinjou.getProjectiles().get(i).getCollisionBox(),
+								enemies.get(j).getCollisionBox())) {
+							shinjou.getProjectiles().remove(i);
+							enemies.get(j).decHealth();
+							enemies.get(j).setCurrentTexture(slimeYellow);
+							if (enemies.get(j).getHealth() < 1) {
+								// enemies.get(j).setAlive(false);
+								enemies.remove(j);
+							}
+
+							if (shinjou.getProjectiles().size() == 0) {
+								break;
+							}
+							if (i > 0)
+								i--;
+
+						}
+					}
+				}
+				
+
+				lastPhysicsFrameMs += physicsDeltaMs;
+			} while (lastPhysicsFrameMs + physicsDeltaMs < (curFrameNS /1000000) );
 
 			if (kbState[KeyEvent.VK_ESCAPE]) {
 				shouldExit = true;
 			}
 
-			float velocity = 250 * ((float) deltaTimeMS / 1000);
-			//
-			// Shinjou Movement
-			//
-			characterMove(velocity, deltaTimeMS);
+			
 			//
 			// Camera Movement
 			//
@@ -261,22 +284,11 @@ public class DemoGame {
 			// Bullet Release
 			if (kbState[KeyEvent.VK_SPACE] && !kbPrevState[KeyEvent.VK_SPACE]) {
 				Projectile proj = new Projectile(spritePos[0] + (spriteSizeMoving[0] / 2),
-						spritePos[1] + (spriteSizeMoving[1] / 2), projectileSize[0], projectileSize[1]);
+						spritePos[1] + (spriteSizeMoving[1] / 2), projectileSize[0], projectileSize[1], projDir);
 				shinjou.addProjectile(proj);
 			}
 
-			ArrayList<Projectile> projList = shinjou.getProjectiles();
-
-			if (projList.size() > 0) {
-				for (int i = 0; i < projList.size(); i++) {
-					// System.out.println("proj: " + projList.get(i).getX());
-
-					if (projList.get(i).getX() > worldHeight) {
-						projList.remove(i);
-					} else
-						projList.get(i).update(velocity * 2);
-				}
-			}
+		
 
 			gl.glClearColor(0, 0, 0, 1);
 			gl.glClear(GL2.GL_COLOR_BUFFER_BIT);
@@ -455,24 +467,33 @@ public class DemoGame {
 	public static void hunt1(long deltaTimeMS, int[] pos) {
 		// float v = 200 * ((float) deltaTimeMS / 1000);
 		float v = (deltaTimeMS / 16) * 3;
-
-		if (fireDir) {
-			if (pos[0] < worldWidth - fireSize[0]) {
+		if (backgroundGrass.getTile((float) Math.floor((pos[0]) / 64), (float) Math.floor(pos[1] / 64))
+				.getCollision()) {
+			if (fireDir)
+				pos[0] -= v;
+			else
 				pos[0] += v;
-
-			} else
-				fireDir = !fireDir;
+			fireDir = !fireDir;
 		} else {
-			if (pos[0] > 0) {
-				pos[0] += -v;
+			if (fireDir) {
+				if (pos[0] < worldWidth - fireSize[0]) {
+					pos[0] += v;
 
-			} else
-				fireDir = !fireDir;
+				} else
+					fireDir = !fireDir;
+			} else {
+				if (pos[0] > 0) {
+					pos[0] += -v;
+
+				} else
+					fireDir = !fireDir;
+			}
 		}
 	}
 
 	public static void hunt2(long deltaTimeMS, int[] pos) {
 		float v = 100 * ((float) deltaTimeMS / 1000);
+		
 		if (pos[0] > spritePos[0]) {
 			pos[0] -= v;
 		} else {
@@ -489,10 +510,15 @@ public class DemoGame {
 	public static void characterMove(float velocity, long deltaTimeMS) {
 		// move up
 		if (kbState[KeyEvent.VK_W]) {
-			
-			spritePos[1] -= velocity;
-			if (spritePos[1] < 0)
-				spritePos[1] = 0;
+			if (!backgroundGrass.getTile((float) Math.floor((spritePos[0]+ 30 ) / 64), (float) Math.floor(spritePos[1] / 64)).getCollision() 
+					&& !backgroundGrass.getTile((float) Math.floor((spritePos[0] + spriteSizeMoving[0]/2) / 64), (float) Math.floor(spritePos[1]/ 64)).getCollision() 
+					&& !backgroundGrass.getTile((float) Math.floor((spritePos[0] + spriteSizeMoving[0]- 30) / 64), (float) Math.floor(spritePos[1]/ 64)).getCollision() )
+			{
+				spritePos[1] -= velocity;
+				if (spritePos[1] < 0)
+					spritePos[1] = 0;
+			}
+
 			moveRightAnimation.updateSprite(deltaTimeMS);
 			shinjou.setCurrentTexture(moveRightAnimation.getCurrentFrame());
 
@@ -500,13 +526,21 @@ public class DemoGame {
 				camera.setY(spritePos[1] - 235);
 			if (camera.getY() < 0)
 				camera.setY(0);
+
+			projDir = 0;
 		}
 
 		// move down
 		else if (kbState[KeyEvent.VK_S]) {
-			spritePos[1] += velocity;
-			if (spritePos[1] > (worldHeight - spriteSizeMoving[1]))
-				spritePos[1] = worldHeight - spriteSizeMoving[1];
+			
+			if (!backgroundGrass.getTile((float) Math.floor((spritePos[0] + 30)/ 64), (float) Math.floor((spritePos[1] + spriteSizeMoving[1]) / 64)).getCollision() 
+					&& !backgroundGrass.getTile((float) Math.floor((spritePos[0] + spriteSizeMoving[0]/2) / 64), (float) Math.floor((spritePos[1] + spriteSizeMoving[1])/ 64)).getCollision() 
+					&& !backgroundGrass.getTile((float) Math.floor((spritePos[0] + spriteSizeMoving[0]- 30) / 64), (float) Math.floor((spritePos[1] + spriteSizeMoving[1])/ 64)).getCollision() )
+			{
+				spritePos[1] += velocity;
+				if (spritePos[1] > (worldHeight - spriteSizeMoving[1]))
+					spritePos[1] = worldHeight - spriteSizeMoving[1];
+			}
 			moveLeftAnimation.updateSprite(deltaTimeMS);
 			shinjou.setCurrentTexture(moveLeftAnimation.getCurrentFrame());
 
@@ -514,27 +548,41 @@ public class DemoGame {
 				camera.setY(spritePos[1] - 235);
 			if (camera.getY() + 1 > tileSize[1] * backgroundGrass.getHeight() - screenY)
 				camera.setY(tileSize[1] * backgroundGrass.getHeight() - screenY);
+			
+			projDir = 2;
 		}
 		// move left
 		else if (kbState[KeyEvent.VK_A]) {
-			spritePos[0] -= velocity;
-			if (spritePos[0] < 0)
-				spritePos[0] = 0;
+			if (!backgroundGrass.getTile((float) Math.floor((spritePos[0] + 15) / 64), (float) Math.floor((spritePos[1] + 15) / 64)).getCollision() 
+					&& !backgroundGrass.getTile((float) Math.floor((spritePos[0] + 15) / 64), (float) Math.floor((spritePos[1] + spriteSizeMoving[1]/2 ) / 64)).getCollision() 
+					&& !backgroundGrass.getTile((float) Math.floor((spritePos[0] + 15) / 64), (float) Math.floor((spritePos[1] - 15 + spriteSizeMoving[1]) / 64)).getCollision() )
+			{
+				spritePos[0] -= velocity;
+				if (spritePos[0] < 0)
+					spritePos[0] = 0;
+			}
 
 			moveLeftAnimation.updateSprite(deltaTimeMS);
 			shinjou.setCurrentTexture(moveLeftAnimation.getCurrentFrame());
 
 			if (spritePos[0] < worldWidth - 480)
 				camera.setX(spritePos[0] - 320);
-
 			if (camera.getX() - 1 < 0)
 				camera.setX(0);
+			
+			projDir = 3;
 		}
 		// move right
 		else if (kbState[KeyEvent.VK_D]) {
-			spritePos[0] += velocity;
-			if (spritePos[0] > (worldWidth - spriteSizeMoving[0]))
-				spritePos[0] = worldWidth - spriteSizeMoving[0];
+			
+			if (!backgroundGrass.getTile((float) Math.floor((spritePos[0] - 15 + spriteSizeMoving[0]) / 64), (float) Math.floor((spritePos[1] + 15) / 64)).getCollision() 
+					&& !backgroundGrass.getTile((float) Math.floor((spritePos[0] - 15 + spriteSizeMoving[0]) / 64), (float) Math.floor((spritePos[1] + spriteSizeMoving[1]/2 ) / 64)).getCollision() 
+					&& !backgroundGrass.getTile((float) Math.floor((spritePos[0] - 15 + spriteSizeMoving[0]) / 64), (float) Math.floor((spritePos[1] - 15 + spriteSizeMoving[1]) / 64)).getCollision() )
+			{
+				spritePos[0] += velocity;
+				if (spritePos[0] > (worldWidth - spriteSizeMoving[0]))
+					spritePos[0] = worldWidth - spriteSizeMoving[0];
+			}
 			moveRightAnimation.updateSprite(deltaTimeMS);
 			shinjou.setCurrentTexture(moveRightAnimation.getCurrentFrame());
 
@@ -542,6 +590,7 @@ public class DemoGame {
 				camera.setX(spritePos[0] - 320);
 			if (camera.getX() > tileSize[0] * backgroundGrass.getWidth() - screenX)
 				camera.setX(tileSize[0] * backgroundGrass.getWidth() - screenX);
+			projDir = 1;
 		} else {
 			idleAnimation.updateSprite(deltaTimeMS);
 			shinjou.setCurrentTexture(idleAnimation.getCurrentFrame());

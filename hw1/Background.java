@@ -11,10 +11,11 @@ class Background
 	// 3 == sand1
 	// 4 == sand2
 	// 5 == lava
-	// 6 == tile
+	// 6 == pavement
+	// 7 - 10 = house
 	int[] world = { 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,2,
-			        1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,4,2,
-			        1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,4,2,
+			        1,0,0,0,0,0,0,0,0,7,8,7,8,7,8,0,0,0,0,0,0,0,0,0,0,0,0,3,4,2,
+			        1,0,0,0,0,0,0,0,0,9,10,9,10,9,10,0,0,0,0,0,0,0,0,0,0,0,0,3,4,2,
 			        1,6,6,6,6,6,6,6,6,6,6,6,6,6,6,0,0,0,0,0,0,0,0,0,0,0,0,4,3,1,
 			        1,6,6,6,6,6,6,6,6,6,6,6,6,6,6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,
 			        1,0,0,0,0,0,0,0,0,0,0,0,0,6,6,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,
@@ -67,6 +68,14 @@ class Background
 				tiles[i] = new Tile(images[5], true);
 			else if (world[i] == 6)
 				tiles[i] = new Tile(images[6], false);
+			else if (world[i] == 7)
+				tiles[i] = new Tile(images[7], true);
+			else if (world[i] == 8)
+				tiles[i] = new Tile(images[8], true);
+			else if (world[i] == 9)
+				tiles[i] = new Tile(images[9], true);
+			else if (world[i] == 10)
+				tiles[i] = new Tile(images[10], true);
 		}
 	}
 
@@ -80,9 +89,9 @@ class Background
 		return height;
 	}
 
-	public Tile getTile(float f, float g)
+	public Tile getTile(float x, float y)
 	{
-		return tiles[(int) (g * width + f)];
+		return tiles[(int) (y * width + x)];
 	}
 
 }
