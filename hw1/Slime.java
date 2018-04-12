@@ -1,14 +1,13 @@
 package hw1;
 
-public class Slime extends Character{
+public class Slime extends Character {
 	private int health;
 
 	public Slime(float x, float y, int width, int height, int tex) {
 		super(x, y, width, height, tex);
 		health = 2;
-		
 	}
-	
+
 	public int getHealth() {
 		return health;
 	}
@@ -16,9 +15,10 @@ public class Slime extends Character{
 	public void setHealth(int h) {
 		this.health = h;
 	}
-	
+
 	public void decHealth() {
 		health -= 1;
 	}
-
 }
+
+

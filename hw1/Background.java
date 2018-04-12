@@ -59,7 +59,7 @@ class Background
 			else if (world[i] == 1)
 				tiles[i] = new Tile(images[1], true);
 			else if (world[i] == 2)
-				tiles[i] = new Tile(images[2], false);
+				tiles[i] = new Tile(images[2], true);
 			else if (world[i] == 3)
 				tiles[i] = new Tile(images[3], false);
 			else if (world[i] == 4)

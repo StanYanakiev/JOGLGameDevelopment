@@ -3,12 +3,13 @@ package hw1;
 import java.util.ArrayList;
 
 public class Character {
-	private float x, y;
-	private int width, height;
-	private int currentFrameTex;
-	private boolean alive;
-	private AABBCamera hitbox;
-	private ArrayList<Projectile> projectiles;
+	protected float x, y;
+	protected int width, height;
+	protected int currentFrameTex;
+	protected boolean busy;
+	protected boolean shooting;
+	protected AABBCamera hitbox;
+	protected ArrayList<Projectile> projectiles;
 
 	public Character(float x, float y, int width, int height, int tex) {
 		this.x = x;
@@ -16,7 +17,8 @@ public class Character {
 		this.width = width;
 		this.height = height;
 		currentFrameTex = tex;
-		alive = true;
+		busy = false;
+		shooting = false;
 		hitbox = new AABBCamera(x, y, width, height);
 		projectiles = new ArrayList<Projectile>();
 	}
@@ -74,8 +76,22 @@ public class Character {
 		return hitbox;
 	}
 	
-	public void setAlive(boolean b)
+	public void setBusy(boolean b)
 	{
-		alive = b;
+		busy = b;
+	}
+	
+	public boolean getBusy()
+	{
+		return busy;
+	}
+	public void setShooting(boolean s)
+	{
+		shooting = s;
+	}
+	
+	public boolean getShooting()
+	{
+		return shooting;
 	}
 }

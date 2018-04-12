@@ -14,14 +14,16 @@ public class Animation {
 	}
 	
 	public void updateSprite(float deltaTime) {
-		timeLeft -= deltaTime;
-		while (timeLeft <= 0) {    
-			currentFrame++;
-			if (currentFrame > animations.length - 1) {
-				finished = true;
-				currentFrame = 0;
+		if (animations.length > 0) {
+			timeLeft -= deltaTime;
+			while (timeLeft <= 0) {
+				currentFrame++;
+				if (currentFrame > animations.length - 1) {
+					finished = true;
+					currentFrame = 0;
+				}
+				timeLeft += animations[currentFrame].imageActiveTime;
 			}
-			timeLeft += animations[currentFrame].imageActiveTime;
 		}
 	}
 	
