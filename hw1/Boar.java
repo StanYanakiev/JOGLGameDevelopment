@@ -1,6 +1,7 @@
 package hw1;
 
 import java.util.Random;
+import java.util.Timer;
 
 public class Boar extends Character {
 	public int health;
@@ -15,6 +16,8 @@ public class Boar extends Character {
 	boolean collision;
 	boolean onX = false;
 	float[] target = { -1, -1 };
+	
+	
 
 	public Boar(float x, float y, int width, int height, int tex, Animation texLeft, Animation texRight) {
 		super(x, y, width, height, tex);
@@ -25,6 +28,8 @@ public class Boar extends Character {
 		collision = false;
 		health = 3;
 		
+		points = 2;
+		
 		chase = 0.95; // 15%
 		runAway = 0.70; // 70%
 		random = 1; // 5%
@@ -32,10 +37,10 @@ public class Boar extends Character {
 	}
 
 	public void makeDecision() {
-		double random = Math.random();
-		if (random < runAway)
+		double randomNum = Math.random();
+		if (randomNum < runAway)
 			mood = 1;
-		else if (random < chase)
+		else if (randomNum < chase)
 			mood = 0;
 		else
 			mood = 2;
@@ -44,12 +49,11 @@ public class Boar extends Character {
 
 	public void chase(float v, float[] spritePos) {
 		
-		if(x - spritePos[0] < 2 && x - spritePos[0] > -2)
-		{	x = spritePos[0];
-			onX = true;
+		if(x - spritePos[0] < 5 && x - spritePos[0] > -5)
+		{	onX = true;
 			currAnimation = animateRight;
 		}
-		else if (x < spritePos[0]) {
+		else if (x - 5< spritePos[0]) {
 			deltaX = v;
 			currDir = true;
 			onX = false;
@@ -87,8 +91,25 @@ public class Boar extends Character {
 			deltaY = +v;
 	}
 
-	public void random(float v) {
+	public void random(float v, float[] target1) {
+		Random rand = new Random();
+		float  rDistance = rand.nextInt(200) + 100;
+		int rLocation = rand.nextInt(4);
 	
+        switch (rLocation) {
+            case 0: target[0] = (target[0] - rDistance) ;
+    				    target[1] = target[1] - rDistance;
+                     break;
+            case 1: target[0] = (target[0] + rDistance) ;
+    					target[1] = target[1] - rDistance; 
+                     break;
+            	case 2:  target[0] = (target[0] + rDistance) ;
+        				target[1] = target[1] + rDistance;
+                     break;
+            case 3: target[0] = (target[0] - rDistance) ;
+    					target[1] = target[1] + rDistance;
+                     break;
+        }
 		if (x <= target[0]) {
 			deltaX = v;
 			currDir = true;
@@ -128,7 +149,7 @@ public class Boar extends Character {
 						.getCollision()
 				|| bg.getTile((float) Math.floor((x + width) / 64), (float) Math.floor((y + height) / 64))
 						.getCollision()) {
-			//System.out.println("left collision)");
+			
 			x -= v;
 			collision = true;
 		}
@@ -168,40 +189,31 @@ public class Boar extends Character {
 
 	public void update(float dt, float[] spritePos, Background bg) {
 		float v = setVelocity(dt);
-		int prevMood = mood;
 		if (target[0] == -1 && target[1] == -1) {
 			setTargetToSprite(spritePos);
 		}
 
 		if (closeEnough(target) || collision) {
+
 			makeDecision();
-			//System.out.println("New Decision Made");
+		
 		}
 		collision = false;
 		if (mood == 0) {
 			setTargetToSprite(spritePos);
-			chase(v, target);
+			chase(v, spritePos);
 		} else if (mood == 1) {
 			setTargetToSprite(spritePos);
-			runAway(v, target);
-		} else if (prevMood == 2 && mood == 2) {
-			random(v);
+			runAway(v, spritePos);
 		} else {
-			Random rand = new Random();
-			float xPoint = rand.nextInt(1920);
-			float yPoint = rand.nextInt(1920);
-			target[0] = xPoint;
-			target[1] = yPoint;
-			random(v);
-			
-			
+			random(v, spritePos);
 		}
 
 		currAnimation.updateSprite(dt);
 		// Actually move!
-		x += deltaX;
+		setX(x + deltaX);;
 		horizontalWallCollision(v, bg);
-		y += deltaY;
+		setY(y + deltaY);
 		verticalWallCollision(v, bg);
 	}
 

@@ -10,13 +10,15 @@ public class FireBoar extends Boar
 		chase = 0.80; // 80%
 		runAway = 1; // 5%
 		random = .95; // 15%
+		
+		points = 5;
 	}
 	
 	public void makeDecision() {
-		double random = Math.random();
-		if (random < chase)
+		double randomNum = Math.random();
+		if (randomNum < chase)
 			mood = 0;
-		else if (random < random)
+		else if (randomNum < random)
 			mood = 2;
 		else
 			mood = 1;

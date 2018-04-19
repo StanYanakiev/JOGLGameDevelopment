@@ -3,21 +3,30 @@ package hw1;
 public class Projectile {
 	
 	private float x, y;
-	private int width, height, projDir;
+	private int width, height, projDir, currentFrameTex;
 	private AABBCamera collisionBox;
 	private boolean visible, active;
 
 	
-	public Projectile(float x, float y, int width, int height, int dir) {
+	public Projectile(float x, float y, int width, int height, int dir, int[] tex) {
 		this.x = x;
 		this.y = y;
 		this.width = width;
 		this.height = height;
 		this.projDir = dir;
-		visible = false;
+		visible = true;
 		active = true;
 	
 		collisionBox = new AABBCamera(x, y, width, height);
+		
+		if(dir == 0)
+			currentFrameTex = tex[0];
+		else if(dir == 1)
+			currentFrameTex = tex[1];
+		else if(dir == 2)
+			currentFrameTex = tex[2];
+		else
+			currentFrameTex = tex[3];
 	}
 	
 	public void update(float velocity) {
@@ -65,6 +74,17 @@ public class Projectile {
 		this.y = y;
 	}
 	
+	public int getCurrentTexture() {
+		return currentFrameTex;
+	}
+
+	public void setCurrentTexture(int tex) {
+		this.currentFrameTex = tex;
+	}
+	
+	public int getDir() {
+		return projDir;
+	}
 	public boolean isVisible() {
 		return visible;
 	}

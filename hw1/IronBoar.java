@@ -9,12 +9,14 @@ public class IronBoar extends Boar
 		runAway = 1; // 10%d
 		random = .55; // 55%
 		health = 5;
+		
+		points= 3;
 	}
 	public void makeDecision() {
-		double random = Math.random();
-		if (random < random)
+		double randomNum = Math.random();
+		if (randomNum < random)
 			mood = 2;
-		else if (random < chase)
+		else if (randomNum < chase)
 			mood = 0;
 		else
 			mood = 1;

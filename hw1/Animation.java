@@ -14,8 +14,9 @@ public class Animation {
 	}
 	
 	public void updateSprite(float deltaTime) {
+		timeLeft -= deltaTime;
 		if (animations.length > 0) {
-			timeLeft -= deltaTime;
+			
 			while (timeLeft <= 0) {
 				currentFrame++;
 				if (currentFrame > animations.length - 1) {

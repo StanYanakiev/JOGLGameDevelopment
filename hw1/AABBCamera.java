@@ -1,13 +1,14 @@
 package hw1;
 
-public class AABBCamera extends Camera{
-	private float x, y;
+public class AABBCamera extends Camera  {
+	
 	private int height, width;
+	private float x, y;
 
-	public AABBCamera(float spritePos, float spritePos2, int height, int width) {
-		super(spritePos,spritePos2);
-		this.x = spritePos;
-		this.y = spritePos2;
+	public AABBCamera(float x, float y, int height, int width) {
+		super(x,y);
+		this.x = x;
+		this.y = y;
 		this.height = height;
 		this.width = width;
 	}
@@ -28,7 +29,20 @@ public class AABBCamera extends Camera{
 		this.width = width;
 	}
 
-	
+	public float getX() {
+		return x;
+	}
+
+	public void setX(float x) {
+		this.x = x;
+	}
+
+	public float getY() {
+		return y;
+	}
+
+	public void setY(float y) {
+		this.y = y;
+	}
 
 }
-

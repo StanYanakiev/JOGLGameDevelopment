@@ -6,8 +6,9 @@ public class Character {
 	protected float x, y;
 	protected int width, height;
 	protected int currentFrameTex;
-	protected boolean busy;
-	protected boolean shooting;
+	protected int points;
+	protected boolean busy, shooting, alive;
+
 	protected AABBCamera hitbox;
 	protected ArrayList<Projectile> projectiles;
 
@@ -19,15 +20,25 @@ public class Character {
 		currentFrameTex = tex;
 		busy = false;
 		shooting = false;
+		alive = true;
 		hitbox = new AABBCamera(x, y, width, height);
 		projectiles = new ArrayList<Projectile>();
+		points = 0;
+	}
+
+	public int getPoints() {
+		return points;
+	}
+
+	public void setPoints(int points) {
+		this.points = points;
 	}
 
 	public float getX() {
 		return x;
 	}
 
-	public void setX(int x) {
+	public void setX(float x) {
 		this.x = x;
 		hitbox.setX(x);
 	}
@@ -36,7 +47,7 @@ public class Character {
 		return y;
 	}
 
-	public void setY(int y) {
+	public void setY(float y) {
 		this.y = y;
 		hitbox.setY(y);
 	}
@@ -72,26 +83,31 @@ public class Character {
 	public void setWidth(int width) {
 		this.width = width;
 	}
+
 	public AABBCamera getCollisionBox() {
 		return hitbox;
 	}
-	
-	public void setBusy(boolean b)
-	{
+
+	public void setBusy(boolean b) {
 		busy = b;
 	}
-	
-	public boolean getBusy()
-	{
+
+	public boolean getBusy() {
 		return busy;
 	}
-	public void setShooting(boolean s)
-	{
+
+	public void setShooting(boolean s) {
 		shooting = s;
 	}
-	
-	public boolean getShooting()
-	{
+
+	public boolean getShooting(){
 		return shooting;
+	}
+
+	public void setAlive(boolean alive) {
+		this.alive = alive;
+	}
+	public boolean isAlive(){
+		return alive;
 	}
 }
