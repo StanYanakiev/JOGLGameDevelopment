@@ -1,6 +1,6 @@
 package hw1;
 
-public class IronBoar extends Boar
+public class IronBoar extends Enemy
 {
 
 	public IronBoar(float x, float y, int width, int height, int tex, Animation texLeft, Animation texRight) {
@@ -9,8 +9,8 @@ public class IronBoar extends Boar
 		runAway = 1; // 10%d
 		random = .55; // 55%
 		health = 5;
-		
-		points= 3;
+		damage = 1;
+		points = 3;
 	}
 	public void makeDecision() {
 		double randomNum = Math.random();

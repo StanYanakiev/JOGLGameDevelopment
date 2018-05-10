@@ -6,8 +6,8 @@ public class Character {
 	protected float x, y;
 	protected int width, height;
 	protected int currentFrameTex;
-	protected int points;
-	protected boolean busy, shooting, alive;
+	protected int points, damage, health;
+	protected boolean isHit, shooting, alive, visible;
 
 	protected AABBCamera hitbox;
 	protected ArrayList<Projectile> projectiles;
@@ -18,14 +18,39 @@ public class Character {
 		this.width = width;
 		this.height = height;
 		currentFrameTex = tex;
-		busy = false;
+		isHit = false;
 		shooting = false;
 		alive = true;
+		visible = true;
 		hitbox = new AABBCamera(x, y, width, height);
 		projectiles = new ArrayList<Projectile>();
-		points = 0;
+	
 	}
 
+	public int getHealth() {
+		return health;
+	}
+
+	public void setHealth(int health) {
+		this.health = health;
+	}
+	
+	public boolean isVisible() {
+		return visible;
+	}
+
+	public void setVisible(boolean visible) {
+		this.visible = visible;
+	}
+
+	public int getDamage() {
+		return damage;
+	}
+
+	public void setDamage(int damage) {
+		this.damage = damage;
+	}
+	
 	public int getPoints() {
 		return points;
 	}
@@ -88,12 +113,12 @@ public class Character {
 		return hitbox;
 	}
 
-	public void setBusy(boolean b) {
-		busy = b;
+	public void setHit(boolean h) {
+		isHit = h;
 	}
 
-	public boolean getBusy() {
-		return busy;
+	public boolean getIsHit() {
+		return isHit;
 	}
 
 	public void setShooting(boolean s) {
@@ -109,5 +134,8 @@ public class Character {
 	}
 	public boolean isAlive(){
 		return alive;
+	}
+	public void decHealth() {
+		health -= 1;
 	}
 }

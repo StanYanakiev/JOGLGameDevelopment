@@ -1,16 +1,14 @@
 package hw1;
 
-public class FireBoar extends Boar
+public class FireBoar extends Enemy
 {
-	
-	
 	public FireBoar(float x, float y, int width, int height, int tex, Animation texLeft, Animation texRight) {
 		super(x, y, width, height, tex, texLeft, texRight);
 		health = 2;
 		chase = 0.80; // 80%
 		runAway = 1; // 5%
 		random = .95; // 15%
-		
+		damage = 3;
 		points = 5;
 	}
 	

@@ -6,6 +6,14 @@ public class Animation {
 	float timeLeft;
 	boolean finished;
 	
+	public boolean isFinished() {
+		return finished;
+	}
+
+	public void setFinished(boolean finished) {
+		this.finished = finished;
+	}
+
 	public Animation(AnimationFrame[] a) {
 		animations = a;
 		currentFrame = 0;
