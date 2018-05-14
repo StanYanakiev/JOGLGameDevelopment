@@ -80,14 +80,15 @@ public class DemoGame {
 	private static int[] boarPos = new int[] { 0, 0 };
 	private static int[] shooterSize = new int[2];
 	private static int[] shooterAttackSize = new int[2];
-	private static int[] shooterPos = new int[2];
 	//Shooter
 	
 	// Extra
 	private static boolean fireDir = true;
 	// Projectile
-	private static int[] projectileSizeH = new int[2];
-	private static int[] projectileSizeV = new int[2];
+	public static int[] projectileSizeH = new int[2];
+	public static int[] projectileSizeV = new int[2];
+	public static int[] projectileQuiver= new int[2];
+	public static int fireQuiver;
 
 	public static void main(String[] args) {
 		GLProfile gl2Profile;
@@ -166,6 +167,7 @@ public class DemoGame {
 		int healthTex = glTexImageTGAFile(gl, "data/health.tga", healthSize);
 		int scoreTex = glTexImageTGAFile(gl, "data/score.tga", scoreSize);
 		int enemiesLeftTex = glTexImageTGAFile(gl, "data/eLeft.tga", enemiesLeftSize);
+		fireQuiver = glTexImageTGAFile(gl, "data/fireQuiver.tga", projectileQuiver);
 
 		// Glyphs and Font
 		GlyphDef[] glyphList = { new GlyphDef("data/zero.tga", 33, "0"), new GlyphDef("data/one.tga", 22, "1"),
@@ -261,10 +263,18 @@ public class DemoGame {
 				new AnimationFrame(glTexImageTGAFile(gl, "data/ironBoarRightOne.tga", boarSize), (float) 400),
 				new AnimationFrame(glTexImageTGAFile(gl, "data/ironBoarRightTwo.tga", boarSize), (float) 400),
 				new AnimationFrame(glTexImageTGAFile(gl, "data/ironBoarRightThree.tga", boarSize), (float) 400), };
+		
 		int[] arrowDir = { glTexImageTGAFile(gl, "data/arrowUp.tga", projectileSizeV),
 				glTexImageTGAFile(gl, "data/arrowRight.tga", projectileSizeH),
 				glTexImageTGAFile(gl, "data/arrowDown.tga", projectileSizeV),
 				glTexImageTGAFile(gl, "data/arrowLeft.tga", projectileSizeH) };
+		int[] fireArrowDir = { glTexImageTGAFile(gl, "data/fireArrowUp.tga", projectileSizeV),
+				glTexImageTGAFile(gl, "data/fireArrowRight.tga", projectileSizeH),
+				glTexImageTGAFile(gl, "data/fireArrowDown.tga", projectileSizeV),
+				glTexImageTGAFile(gl, "data/fireArrowLeft.tga", projectileSizeH) };
+		
+		int[] badArrowDir = { glTexImageTGAFile(gl, "data/badArrowLeft.tga", projectileSizeH),
+				glTexImageTGAFile(gl, "data/badArrowRight.tga", projectileSizeH) };
 
 		// Slimes
 		ArrayList<Enemy> enemies = new ArrayList<>();
@@ -296,31 +306,31 @@ public class DemoGame {
 		ironBoarRightAnimation = new Animation(ironBoarRight);
 
 		ArrayList<Enemy> boars = new ArrayList<Enemy>();
-		boars.add(new WildBoar(enemyPos[0] + 64, enemyPos[1] + 64, boarSize[0], boarSize[1], wildBoarRight[0].getImage(),
+		boars.add(new FireBoar(enemyPos[0] + 64, enemyPos[1] + 64, boarSize[0], boarSize[1], wildBoarRight[0].getImage(),
 				wildBoarLeftAnimation, wildBoarRightAnimation));
-//		boars.add(new WildBoar(enemyPos[0] + 240, enemyPos[1] + 240, boarSize[0], boarSize[1], wildBoarRight[0].getImage(),
-//				wildBoarLeftAnimation, wildBoarRightAnimation));
-//		boars.add(new IronBoar(enemyPos[0] + 400, enemyPos[1] + 400, boarSize[0], boarSize[1],
-//				ironBoarRight[0].getImage(), ironBoarLeftAnimation, ironBoarRightAnimation));
-//		boars.add(new IronBoar(enemyPos[0] + 240, enemyPos[1] + 800, boarSize[0], boarSize[1],
-//				ironBoarRight[0].getImage(), ironBoarLeftAnimation, ironBoarRightAnimation));
-//		boars.add(new IronBoar(enemyPos[0] + 1000, enemyPos[1] + 65, boarSize[0], boarSize[1],
-//				ironBoarRight[0].getImage(), ironBoarLeftAnimation, ironBoarRightAnimation));
-//		boars.add(new IronBoar(enemyPos[0] + 129, enemyPos[1] + 1000, boarSize[0], boarSize[1],
-//				ironBoarRight[0].getImage(), ironBoarLeftAnimation, ironBoarRightAnimation));
-//		boars.add(new FireBoar(enemyPos[0] + 240, enemyPos[1] + 240, boarSize[0], boarSize[1],
-//				fireBoarRight[0].getImage(), fireBoarLeftAnimation, fireBoarRightAnimation));
-//		boars.add(new FireBoar(enemyPos[0] + 640, enemyPos[1] + 840, boarSize[0], boarSize[1],
-//				fireBoarRight[0].getImage(), fireBoarLeftAnimation, fireBoarRightAnimation));
+		boars.add(new FireBoar(enemyPos[0] + 240, enemyPos[1] + 240, boarSize[0], boarSize[1], wildBoarRight[0].getImage(),
+				wildBoarLeftAnimation, wildBoarRightAnimation));
+		boars.add(new FireBoar(enemyPos[0] + 400, enemyPos[1] + 400, boarSize[0], boarSize[1],
+				ironBoarRight[0].getImage(), ironBoarLeftAnimation, ironBoarRightAnimation));
+		boars.add(new FireBoar(enemyPos[0] + 240, enemyPos[1] + 800, boarSize[0], boarSize[1],
+				ironBoarRight[0].getImage(), ironBoarLeftAnimation, ironBoarRightAnimation));
+		boars.add(new FireBoar(enemyPos[0] + 1000, enemyPos[1] + 65, boarSize[0], boarSize[1],
+				ironBoarRight[0].getImage(), ironBoarLeftAnimation, ironBoarRightAnimation));
+		boars.add(new FireBoar(enemyPos[0] + 129, enemyPos[1] + 1000, boarSize[0], boarSize[1],
+				ironBoarRight[0].getImage(), ironBoarLeftAnimation, ironBoarRightAnimation));
+		boars.add(new FireBoar(enemyPos[0] + 240, enemyPos[1] + 240, boarSize[0], boarSize[1],
+				fireBoarRight[0].getImage(), fireBoarLeftAnimation, fireBoarRightAnimation));
+		boars.add(new FireBoar(enemyPos[0] + 640, enemyPos[1] + 840, boarSize[0], boarSize[1],
+				fireBoarRight[0].getImage(), fireBoarLeftAnimation, fireBoarRightAnimation));
 	
 		shinjou = new Shinjou(spritePos[0], spritePos[1], spriteSizeIdle[0], spriteSizeIdle[0], idle[0].getImage(),
 				idleAnimation, moveLeftAnimation, moveRightAnimation, attackLeftAnimation, attackRightAnimation);
 		
 		ArrayList<Enemy> hunters = new ArrayList<>();
 		hunters.add(new Hunter(enemyPos[0] + 640, enemyPos[1] + 840, shooterSize[0], shooterSize[1],
-				shooterRight[0].getImage(), shooterLeftAnimation, shooterRightAnimation, shooterAttackLeftAnimation, shooterAttackRightAnimation));
+				shooterRight[0].getImage(), shooterLeftAnimation, shooterRightAnimation, shooterAttackLeftAnimation, shooterAttackRightAnimation, badArrowDir));
 		hunters.add(new Hunter(enemyPos[0] + 200, enemyPos[1] + 200, shooterSize[0], shooterSize[1],
-				shooterLeft[0].getImage(), shooterLeftAnimation, shooterRightAnimation, shooterAttackLeftAnimation, shooterAttackRightAnimation));
+				shooterLeft[0].getImage(), shooterLeftAnimation, shooterRightAnimation, shooterAttackLeftAnimation, shooterAttackRightAnimation, badArrowDir));
 		
 
 		// Create a bounding box camera for both the monkey and camera
@@ -377,7 +387,7 @@ public class DemoGame {
 					// Char Movement
 					characterMove(velocity, deltaTimeMS);
 
-					// Projectile Collision with Background
+					// Character Projectile Collision with Background
 					if (projList.size() > 0) {
 						for (int i = 0; i < projList.size(); i++) {
 							// System.out.println("proj: " + projList.get(i).getX());
@@ -393,6 +403,29 @@ public class DemoGame {
 								projList.remove(i);
 							} else
 								proj.update(velocity * 2);
+						}
+					}
+					
+					// Hunter Projectile Collision with Background
+					for (Enemy h : hunters) {
+						ArrayList<Projectile> projList2 = h.getProjectiles();
+						if (h.getProjectiles().size() > 0) {
+							for (int i = 0; i < projList2.size(); i++) {
+								
+								// System.out.println("proj: " + projList.get(i).getX());
+								Projectile proj = projList2.get(i);
+								if (backgroundTiles
+										.getTile((float) Math.floor((proj.getX() + proj.getWidth() / 2) / 64),
+												(float) Math.floor((proj.getY() + proj.getHeight() / 2) / 64))
+										.getCollision())
+									projList2.remove(i);
+
+								if (proj.getX() > worldWidth || proj.getX() < 0 || proj.getY() > worldHeight
+										|| proj.getY() < 0) {
+									projList2.remove(i);
+								} else
+									proj.update(velocity * 2);
+							}
 						}
 					}
 
@@ -463,8 +496,11 @@ public class DemoGame {
 
 				for (Enemy b : boars) 
 					b.update(deltaTimeMS, spritePos, backgroundTiles);
-				for (Enemy h : hunters) 
+				for (Enemy h : hunters) {
 					h.update(deltaTimeMS, spritePos, backgroundTiles);
+					h.hitDetection(shinjou);
+				}
+				
 				
 
 				gl.glClearColor(0, 0, 0, 1);
@@ -507,38 +543,52 @@ public class DemoGame {
 							firePos[1] - camera.getY(), fireSize[0], fireSize[1]);
 				}
 
-				// Projectiles
+				// Char's Projectiles
 				for (int i = 0; i < projList.size(); i++) {
-					// if (AABBIntersect(cameraAABB, projList.get(i).getCollisionBox()))
-					if (shinjou.getProjectiles().get(i).getDir() == 0 || shinjou.getProjectiles().get(i).getDir() == 2)
-						glDrawSprite(gl, shinjou.getProjectiles().get(i).getCurrentTexture(),
-								projList.get(i).getX() - camera.getX(), projList.get(i).getY() - camera.getY(),
-								projectileSizeV[0], projectileSizeV[1]);
-					else
-						glDrawSprite(gl, shinjou.getProjectiles().get(i).getCurrentTexture(),
-								projList.get(i).getX() - camera.getX(), projList.get(i).getY() - camera.getY(),
-								projectileSizeH[0], projectileSizeH[1]);
+					if (AABBIntersect(cameraAABB, projList.get(i).getCollisionBox())) {
+						if (shinjou.getProjectiles().get(i).getDir() == 0
+								|| shinjou.getProjectiles().get(i).getDir() == 2)
+							glDrawSprite(gl, shinjou.getProjectiles().get(i).getCurrentTexture(),
+									projList.get(i).getX() - camera.getX(), projList.get(i).getY() - camera.getY(),
+									projectileSizeV[0], projectileSizeV[1]);
+						else
+							glDrawSprite(gl, shinjou.getProjectiles().get(i).getCurrentTexture(),
+									projList.get(i).getX() - camera.getX(), projList.get(i).getY() - camera.getY(),
+									projectileSizeH[0], projectileSizeH[1]);
+					}
 				}
 
 				// Slimes
 				for (int i = 0; i < enemies.size(); i++) {
-					// if (AABBIntersect(cameraAABB, enemies.get(i).getCollisionBox()))
-					glDrawSprite(gl, enemies.get(i).getCurrentTexture(), enemies.get(i).getX() - camera.getX(),
-							enemies.get(i).getY() - camera.getY(), tileSize[0], tileSize[1]);
+					if (AABBIntersect(cameraAABB, enemies.get(i).getCollisionBox())) {
+						glDrawSprite(gl, enemies.get(i).getCurrentTexture(), enemies.get(i).getX() - camera.getX(),
+								enemies.get(i).getY() - camera.getY(), tileSize[0], tileSize[1]);
+					}
 				}
 
 				// Boars
 				for (Enemy b : boars) {
-					// if (AABBIntersect(cameraAABB, b.getCollisionBox()))
-					glDrawSprite(gl, b.getCurrAnimation().getCurrentFrame(), b.getX() - camera.getX(),
-							b.getY() - camera.getY(), boarSize[0], boarSize[1]);
+					if (AABBIntersect(cameraAABB, b.getCollisionBox())) {
+						glDrawSprite(gl, b.getCurrAnimation().getCurrentFrame(), b.getX() - camera.getX(),
+								b.getY() - camera.getY(), boarSize[0], boarSize[1]);
+					}
 				}
 				
 				// Hunters
-				for(Enemy h: hunters)
-				{
-					glDrawSprite(gl, h.getCurrAnimation().getCurrentFrame(), h.getX() - camera.getX(),
-							h.getY() - camera.getY(), shooterSize[0], shooterSize[1]);
+				for (Enemy h : hunters) {
+					if (AABBIntersect(cameraAABB, h.getCollisionBox()))
+						glDrawSprite(gl, h.getCurrAnimation().getCurrentFrame(), h.getX() - camera.getX(),
+								h.getY() - camera.getY(), shooterSize[0], shooterSize[1]);
+
+					// Projectiles
+					for (int i = 0; i < h.getProjectiles().size(); i++) {
+						if (AABBIntersect(cameraAABB, h.getProjectiles().get(i).getCollisionBox())) {
+							glDrawSprite(gl, h.getProjectiles().get(i).getCurrentTexture(),
+									h.getProjectiles().get(i).getX() - camera.getX(),
+									h.getProjectiles().get(i).getY() - camera.getY(), projectileSizeH[0],
+									projectileSizeH[1]);
+						}
+					}
 				}
 
 				// Character
@@ -558,7 +608,7 @@ public class DemoGame {
 								spritePos[1] - camera.getY(), spriteSizeMoving[0], spriteSizeMoving[1]);
 
 				}
-
+				//glDrawSprite(gl, badArrowDir[0], 80, 80, projectileSizeH[0], projectileSizeH[1]);
 				glDrawSprite(gl, healthTex, 0, 0, healthSize[0], healthSize[1]);
 				glDrawSprite(gl, scoreTex, 128, 0, scoreSize[0], scoreSize[1]);
 				glDrawSprite(gl, enemiesLeftTex, 350, 0, enemiesLeftSize[0], enemiesLeftSize[1]);
@@ -568,8 +618,8 @@ public class DemoGame {
 				font.DrawText(font.getArray(), Integer.toString(enemiesLeft), 350 + enemiesLeftSize[0], 10);
 				font.DrawText(font.getArray(), Integer.toString(shinjou.getHealth()), 65, 10);
 
-				font.DrawText(font.getArray(), Integer.toString((int) shinjou.getX()), 0 + enemiesLeftSize[0], 128);
-				font.DrawText(font.getArray(), Integer.toString((int) shinjou.getY()), 0 + enemiesLeftSize[0], 328);
+				//font.DrawText(font.getArray(), Integer.toString((int) shinjou.getX()), 0 + enemiesLeftSize[0], 128);
+				//font.DrawText(font.getArray(), Integer.toString((int) shinjou.getY()), 0 + enemiesLeftSize[0], 328);
 			}
 			// Present to the player.
 			

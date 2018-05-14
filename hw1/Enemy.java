@@ -11,7 +11,7 @@ public class Enemy extends Character {
 	double chase, runAway, random;
 	int count;
 	int mood; // 0 = chase, 1 = runaway, 2 = random;
-	float deltaX, deltaY;
+	float deltaX, deltaY, v;
 	boolean currDir; // left = false, right = true;
 	boolean collision, busy;
 
@@ -57,7 +57,7 @@ public class Enemy extends Character {
 			shootDecision(spritePos);
 		} else {
 
-			float v = setVelocity(dt);
+			v = setVelocity(dt);
 			if (target[0] < 0 && target[1] < 0) {
 				setTargetToSprite(spritePos);
 			}
@@ -99,56 +99,20 @@ public class Enemy extends Character {
 		else
 			currAnimation = animateLeft;
 		if (this instanceof Hunter) {
-			shootDecision(spritePos);
+			if ((x - spritePos[0] > -500 || x - spritePos[0] < 500)
+					&& (y - spritePos[1] > -200 || y - spritePos[1] < 200)) {
+				shootDecision(spritePos);
+			}
 		}
 
+	}
+	public void hitDetection(Shinjou c){
 	}
 
 	public void shootDecision(float[] spritePos) {
-		// if the difference in X is 500 and difference in Y is 200
-		if (isBusy()) {
-			if (!currDir) {
-				shootLeft.updateSprite(DemoGame.deltaTimeMS);
-				setCurrentTexture(shootLeft.getCurrentFrame());
-			} else {
-				shootRight.updateSprite(DemoGame.deltaTimeMS);
-				setCurrentTexture(shootRight.getCurrentFrame());
-			}
-			if (shootRight.finished || shootLeft.finished || count > 5) {
-				setBusy(false);
-				shootRight.setFinished(false);
-				shootLeft.setFinished(false);
-				if (count > 5) {
-					count = 0;
-				}
-			}
-
-		}
-		// decide to shoot or not
-		else {
-			double randomNum = Math.random();
-			System.out.println("Random for shooting: " + randomNum);
-			if (randomNum < .30) {
-				count++;
-				// shoot
-				// stop moving
-				// deltaX = 0;
-				// deltaY = 0;
-				setBusy(true);
-				if (x < spritePos[0]) {
-					currAnimation = shootRight;
-					currDir = false;
-				} else {
-					currAnimation = shootLeft;
-					currDir = true;
-				}
-
-			}
-		}
 	}
 
 	public void runAway(float v, float[] spritePos) {
-
 		if (x <= spritePos[0]) {
 			deltaX = -v;
 			currDir = false;

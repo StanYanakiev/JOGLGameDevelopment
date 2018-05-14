@@ -5,7 +5,7 @@ public class AABBCamera extends Camera  {
 	private int height, width;
 	private float x, y;
 
-	public AABBCamera(float x, float y, int height, int width) {
+	public AABBCamera(float x, float y, int width, int height) {
 		super(x,y);
 		this.x = x;
 		this.y = y;

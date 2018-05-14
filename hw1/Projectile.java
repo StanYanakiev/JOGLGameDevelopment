@@ -19,14 +19,23 @@ public class Projectile {
 	
 		collisionBox = new AABBCamera(x, y, width, height);
 		
-		if(dir == 0)
-			currentFrameTex = tex[0];
-		else if(dir == 1)
-			currentFrameTex = tex[1];
-		else if(dir == 2)
-			currentFrameTex = tex[2];
-		else
-			currentFrameTex = tex[3];
+		if (tex.length > 2) {
+			if (dir == 0)
+				currentFrameTex = tex[0];
+			else if (dir == 1)
+				currentFrameTex = tex[1];
+			else if (dir == 2)
+				currentFrameTex = tex[2];
+			else
+				currentFrameTex = tex[3];
+		}
+		else if(tex.length == 2)
+		{
+			if (dir == 3)
+				currentFrameTex = tex[0];
+			else if (dir == 1)
+				currentFrameTex = tex[1];
+		}
 	}
 	
 	public void update(float velocity) {
