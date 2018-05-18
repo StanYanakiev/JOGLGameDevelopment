@@ -89,6 +89,7 @@ public class DemoGame {
 	public static int[] projectileSizeV = new int[2];
 	public static int[] projectileQuiver= new int[2];
 	public static int fireQuiver;
+	public static ArrayList<FireQuiver> quiverList = new ArrayList<>();
 
 	public static void main(String[] args) {
 		GLProfile gl2Profile;
@@ -147,7 +148,7 @@ public class DemoGame {
 				glTexImageTGAFile(gl, "data/house1.tga", tileSize), glTexImageTGAFile(gl, "data/house2.tga", tileSize),
 				glTexImageTGAFile(gl, "data/house3.tga", tileSize), glTexImageTGAFile(gl, "data/house4.tga", tileSize),
 				glTexImageTGAFile(gl, "data/grassFlower.tga", tileSize), };
-		backgroundTiles = new Background(backgroundTextures, 30, 30);
+		backgroundTiles = new Background(backgroundTextures, 30, 30, 1);
 
 		// Make a method after in BackGround
 		worldWidth = 64 * 30;
@@ -160,13 +161,15 @@ public class DemoGame {
 		// Health and Score Texture
 		int[] healthSize = new int[2];
 		int[] scoreSize = new int[2];
-		// int[] numSize = new int[2];
 		int[] enemiesLeftSize = new int[2];
+		int[] lockedSize = new int[2];
 		int[] startSreenSize = { screenX, screenY };
 		int startScreen = glTexImageTGAFile(gl, "data/startScreen.tga", startSreenSize);
 		int healthTex = glTexImageTGAFile(gl, "data/health.tga", healthSize);
 		int scoreTex = glTexImageTGAFile(gl, "data/score.tga", scoreSize);
 		int enemiesLeftTex = glTexImageTGAFile(gl, "data/eLeft.tga", enemiesLeftSize);
+		int lockedTex = glTexImageTGAFile(gl, "data/locked.tga", lockedSize);
+		AABBCamera lockedBox = new AABBCamera(1860, 1600, 100, 192);
 		fireQuiver = glTexImageTGAFile(gl, "data/fireQuiver.tga", projectileQuiver);
 
 		// Glyphs and Font
@@ -306,21 +309,23 @@ public class DemoGame {
 		ironBoarRightAnimation = new Animation(ironBoarRight);
 
 		ArrayList<Enemy> boars = new ArrayList<Enemy>();
-		boars.add(new FireBoar(enemyPos[0] + 64, enemyPos[1] + 64, boarSize[0], boarSize[1], wildBoarRight[0].getImage(),
+		boars.add(new WildBoar(enemyPos[0] + 64, enemyPos[1] + 64, boarSize[0], boarSize[1], wildBoarRight[0].getImage(),
 				wildBoarLeftAnimation, wildBoarRightAnimation));
-		boars.add(new FireBoar(enemyPos[0] + 240, enemyPos[1] + 240, boarSize[0], boarSize[1], wildBoarRight[0].getImage(),
+		boars.add(new WildBoar(enemyPos[0] + 240, enemyPos[1] + 240, boarSize[0], boarSize[1], wildBoarRight[0].getImage(),
 				wildBoarLeftAnimation, wildBoarRightAnimation));
-		boars.add(new FireBoar(enemyPos[0] + 400, enemyPos[1] + 400, boarSize[0], boarSize[1],
+		boars.add(new IronBoar(enemyPos[0] + 400, enemyPos[1] + 400, boarSize[0], boarSize[1],
 				ironBoarRight[0].getImage(), ironBoarLeftAnimation, ironBoarRightAnimation));
-		boars.add(new FireBoar(enemyPos[0] + 240, enemyPos[1] + 800, boarSize[0], boarSize[1],
+		boars.add(new IronBoar(enemyPos[0] + 240, enemyPos[1] + 800, boarSize[0], boarSize[1],
 				ironBoarRight[0].getImage(), ironBoarLeftAnimation, ironBoarRightAnimation));
-		boars.add(new FireBoar(enemyPos[0] + 1000, enemyPos[1] + 65, boarSize[0], boarSize[1],
+		boars.add(new IronBoar(enemyPos[0] + 1000, enemyPos[1] + 65, boarSize[0], boarSize[1],
 				ironBoarRight[0].getImage(), ironBoarLeftAnimation, ironBoarRightAnimation));
-		boars.add(new FireBoar(enemyPos[0] + 129, enemyPos[1] + 1000, boarSize[0], boarSize[1],
+		boars.add(new IronBoar(enemyPos[0] + 1700, enemyPos[1] + 1000, boarSize[0], boarSize[1],
 				ironBoarRight[0].getImage(), ironBoarLeftAnimation, ironBoarRightAnimation));
 		boars.add(new FireBoar(enemyPos[0] + 240, enemyPos[1] + 240, boarSize[0], boarSize[1],
 				fireBoarRight[0].getImage(), fireBoarLeftAnimation, fireBoarRightAnimation));
 		boars.add(new FireBoar(enemyPos[0] + 640, enemyPos[1] + 840, boarSize[0], boarSize[1],
+				fireBoarRight[0].getImage(), fireBoarLeftAnimation, fireBoarRightAnimation));
+		boars.add(new FireBoar(enemyPos[0] + 1700, enemyPos[1] + 1700, boarSize[0], boarSize[1],
 				fireBoarRight[0].getImage(), fireBoarLeftAnimation, fireBoarRightAnimation));
 	
 		shinjou = new Shinjou(spritePos[0], spritePos[1], spriteSizeIdle[0], spriteSizeIdle[0], idle[0].getImage(),
@@ -352,6 +357,7 @@ public class DemoGame {
 		int lastPhysicsFrameMs = 0;
 
 		boolean startGame = false;
+		boolean levelOne = false;
 
 		while (!shouldExit) {
 			System.arraycopy(kbState, 0, kbPrevState, 0, kbState.length);
@@ -363,14 +369,19 @@ public class DemoGame {
 				break;
 			}
 			
+			// Start Screen
 			if (!startGame) {
 				glDrawSprite(gl, startScreen, 0, 0, startSreenSize[0], startSreenSize[1]);
 				if (kbState[KeyEvent.VK_ENTER]) {
 					startGame = true;
+					levelOne = true;
 				}
+				if (kbState[KeyEvent.VK_ESCAPE]) 
+					shouldExit = true;
 			}
 			
-			if (startGame) {
+			// Level 1
+			if (levelOne) {
 				// Game logic goes here.
 				lastFrameNS = curFrameNS;
 				curFrameNS = System.nanoTime();
@@ -411,20 +422,24 @@ public class DemoGame {
 						ArrayList<Projectile> projList2 = h.getProjectiles();
 						if (h.getProjectiles().size() > 0) {
 							for (int i = 0; i < projList2.size(); i++) {
-								
+
 								// System.out.println("proj: " + projList.get(i).getX());
 								Projectile proj = projList2.get(i);
-								if (backgroundTiles
-										.getTile((float) Math.floor((proj.getX() + proj.getWidth() / 2) / 64),
-												(float) Math.floor((proj.getY() + proj.getHeight() / 2) / 64))
-										.getCollision())
-									projList2.remove(i);
+								try {
+									if (backgroundTiles
+											.getTile((float) Math.floor((proj.getX() + proj.getWidth() / 2) / 64),
+													(float) Math.floor((proj.getY() + proj.getHeight() / 2) / 64))
+											.getCollision())
+										projList2.remove(i);
 
-								if (proj.getX() > worldWidth || proj.getX() < 0 || proj.getY() > worldHeight
-										|| proj.getY() < 0) {
+									if (proj.getX() > worldWidth || proj.getX() < 0 || proj.getY() > worldHeight
+											|| proj.getY() < 0) {
+										projList2.remove(i);
+									} else
+										proj.update(velocity * 2);
+								} catch (ArrayIndexOutOfBoundsException exception) {
 									projList2.remove(i);
-								} else
-									proj.update(velocity * 2);
+								}
 							}
 						}
 					}
@@ -435,17 +450,41 @@ public class DemoGame {
 
 					// Boars Attacking Char
 					for (Character b : boars) {
-						if (AABBIntersect(b.getCollisionBox(), shinjou.getCollisionBox()) && !shinjou.getIsHit()) {
+						if (AABBIntersect(b.getCollisionBox(), shinjou.getCollisionBox()) && !shinjou.getIsHit() && b.isAlive()) {
 							shinjou.decHealth(b.getDamage());
 							System.out.println("Damage Done: " + b.getDamage());
 							// lastTrueTime=now;
 							shinjou.setHit(true);
 							System.out.println("health: " + shinjou.getHealth());
 						}
-
 					}
-
-					enemiesLeft = enemies.size() + boars.size();
+					
+					// Char Collision with Quiver
+					for(FireQuiver q: quiverList)
+					{
+						if (AABBIntersect(q.getCollisionBox(), shinjou.getCollisionBox())) {
+							q.setVisible(false);
+							shinjou.setFireQuiverOn(true);
+							shinjou.setDamage();
+						}
+					}
+					
+				
+					// Get enemies left
+					enemiesLeft = 0;
+					for(Enemy e: enemies) {
+						if(e.isAlive())
+							enemiesLeft += 1;
+					}
+					for(Enemy e: boars) {
+						if(e.isAlive())
+							enemiesLeft += 1;
+					}
+					for(Enemy e: hunters) {
+						if(e.isAlive())
+							enemiesLeft += 1;
+					}
+					
 					lastPhysicsFrameMs += physicsDeltaMs;
 				} while (lastPhysicsFrameMs + physicsDeltaMs < (curFrameNS / 1000000));
 
@@ -468,13 +507,22 @@ public class DemoGame {
 				if (kbState[KeyEvent.VK_SPACE] && !kbPrevState[KeyEvent.VK_SPACE] && !shinjou.getShooting()) {
 					Projectile proj;
 					if (projDir == 0 || projDir == 2) {
+						if (!shinjou.isFireQuiverOn())
+							proj = new Projectile(spritePos[0] + (spriteSizeMoving[0] / 4),
+									spritePos[1] + (spriteSizeMoving[1] / 4), projectileSizeV[0], projectileSizeV[1],
+									projDir, arrowDir);
+						else
+							proj = new Projectile(spritePos[0] + (spriteSizeMoving[0] / 4),
+									spritePos[1] + (spriteSizeMoving[1] / 4), projectileSizeV[0], projectileSizeV[1],
+									projDir, fireArrowDir);
+					} else if (!shinjou.isFireQuiverOn())
 						proj = new Projectile(spritePos[0] + (spriteSizeMoving[0] / 4),
 								spritePos[1] + (spriteSizeMoving[1] / 4), projectileSizeV[0], projectileSizeV[1],
 								projDir, arrowDir);
-					} else
+					else
 						proj = new Projectile(spritePos[0] + (spriteSizeMoving[0] / 4),
 								spritePos[1] + (spriteSizeMoving[1] / 4), projectileSizeV[0], projectileSizeV[1],
-								projDir, arrowDir);
+								projDir, fireArrowDir);
 					shinjou.addProjectile(proj);
 					shinjou.setShooting(true);
 				}
@@ -494,11 +542,15 @@ public class DemoGame {
 					}
 				}
 
-				for (Enemy b : boars) 
-					b.update(deltaTimeMS, spritePos, backgroundTiles);
+				for (Enemy b : boars) {
+					if (b.isAlive())
+						b.update(deltaTimeMS, spritePos, backgroundTiles);
+				}
 				for (Enemy h : hunters) {
-					h.update(deltaTimeMS, spritePos, backgroundTiles);
-					h.hitDetection(shinjou);
+					if (h.isAlive()) {
+						h.update(deltaTimeMS, spritePos, backgroundTiles);
+						h.hitDetection(shinjou);
+					}
 				}
 				
 				
@@ -559,24 +611,32 @@ public class DemoGame {
 				}
 
 				// Slimes
-				for (int i = 0; i < enemies.size(); i++) {
-					if (AABBIntersect(cameraAABB, enemies.get(i).getCollisionBox())) {
-						glDrawSprite(gl, enemies.get(i).getCurrentTexture(), enemies.get(i).getX() - camera.getX(),
-								enemies.get(i).getY() - camera.getY(), tileSize[0], tileSize[1]);
+				for (Enemy s: enemies) {
+					if (AABBIntersect(cameraAABB, s.getCollisionBox()) && s.isAlive()) {
+						glDrawSprite(gl, s.getCurrentTexture(), s.getX() - camera.getX(),
+								s.getY() - camera.getY(), tileSize[0], tileSize[1]);
 					}
 				}
 
 				// Boars
 				for (Enemy b : boars) {
-					if (AABBIntersect(cameraAABB, b.getCollisionBox())) {
+					if (AABBIntersect(cameraAABB, b.getCollisionBox()) && b.isAlive()) {
 						glDrawSprite(gl, b.getCurrAnimation().getCurrentFrame(), b.getX() - camera.getX(),
 								b.getY() - camera.getY(), boarSize[0], boarSize[1]);
 					}
 				}
 				
+				// Quiver
+				for(FireQuiver q: quiverList)
+				{
+					if(q.isVisible())
+						glDrawSprite(gl, fireQuiver, q.x  - camera.getX(), q.y  - camera.getY(), projectileQuiver[0], projectileQuiver[1]);
+				}
+				
+				
 				// Hunters
 				for (Enemy h : hunters) {
-					if (AABBIntersect(cameraAABB, h.getCollisionBox()))
+					if (AABBIntersect(cameraAABB, h.getCollisionBox()) && h.isAlive())
 						glDrawSprite(gl, h.getCurrAnimation().getCurrentFrame(), h.getX() - camera.getX(),
 								h.getY() - camera.getY(), shooterSize[0], shooterSize[1]);
 
@@ -612,7 +672,15 @@ public class DemoGame {
 				glDrawSprite(gl, healthTex, 0, 0, healthSize[0], healthSize[1]);
 				glDrawSprite(gl, scoreTex, 128, 0, scoreSize[0], scoreSize[1]);
 				glDrawSprite(gl, enemiesLeftTex, 350, 0, enemiesLeftSize[0], enemiesLeftSize[1]);
+				if(shinjou.isFireQuiverOn())
+					glDrawSprite(gl, fireQuiver, 10, 64, projectileQuiver[0], projectileQuiver[1]);
+				if(AABBIntersect(shinjou.getCollisionBox(), lockedBox))
+						glDrawSprite(gl, lockedTex, 1825 - camera.getX(), 1670 - camera.getY(), lockedSize[0], lockedSize[1]);
+					
+		
+				
 				//glDrawSprite(gl, badShooterLeftOne, 200, 200, spriteSizeMoving[0], spriteSizeMoving[1]);
+				
 
 				font.DrawText(font.getArray(), Integer.toString(score), 128 + scoreSize[0], 10);
 				font.DrawText(font.getArray(), Integer.toString(enemiesLeft), 350 + enemiesLeftSize[0], 10);
@@ -780,7 +848,13 @@ public class DemoGame {
 							(float) Math.floor(spritePos[1] / 64)).getCollision()
 					&& !backgroundTiles.getTile((float) Math.floor((spritePos[0] + spriteSizeMoving[0] - 15) / 64),
 							(float) Math.floor(spritePos[1] / 64)).getCollision()) {
-				spritePos[1] -= velocity;
+//				if((kbState[KeyEvent.VK_W] && kbState[KeyEvent.VK_D]) || (kbState[KeyEvent.VK_W] && kbState[KeyEvent.VK_A]))
+//					spritePos[1] -= velocity/2;
+//				else 
+					spritePos[1] -= velocity;
+				
+				
+				
 				if (spritePos[1] < 0)
 					spritePos[1] = 0;
 			} else
@@ -798,7 +872,7 @@ public class DemoGame {
 		}
 
 		// move down
-		else if (kbState[KeyEvent.VK_S] && !shinjou.getShooting()) {
+		if (kbState[KeyEvent.VK_S] && !shinjou.getShooting()) {
 
 			if (!backgroundTiles.getTile((float) Math.floor((spritePos[0] + 15) / 64),
 					(float) Math.floor((spritePos[1] + spriteSizeMoving[1]) / 64)).getCollision()
@@ -806,7 +880,10 @@ public class DemoGame {
 							(float) Math.floor((spritePos[1] + spriteSizeMoving[1]) / 64)).getCollision()
 					&& !backgroundTiles.getTile((float) Math.floor((spritePos[0] + spriteSizeMoving[0] - 15) / 64),
 							(float) Math.floor((spritePos[1] + spriteSizeMoving[1]) / 64)).getCollision()) {
-				spritePos[1] += velocity;
+//				if((kbState[KeyEvent.VK_S] && kbState[KeyEvent.VK_D]) || (kbState[KeyEvent.VK_S] && kbState[KeyEvent.VK_A]))
+//					spritePos[1] += velocity/2;
+//				else 
+					spritePos[1] += velocity;
 				if (spritePos[1] > (worldHeight - spriteSizeMoving[1]))
 					spritePos[1] = worldHeight - spriteSizeMoving[1];
 			} else
@@ -824,7 +901,7 @@ public class DemoGame {
 			projDir = 2;
 		}
 		// move left
-		else if (kbState[KeyEvent.VK_A] && !shinjou.getShooting()) {
+		if (kbState[KeyEvent.VK_A] && !shinjou.getShooting()) {
 			if (!backgroundTiles
 					.getTile((float) Math.floor((spritePos[0]) / 64), (float) Math.floor((spritePos[1] + 15) / 64))
 					.getCollision()
@@ -834,7 +911,13 @@ public class DemoGame {
 							.getTile((float) Math.floor((spritePos[0]) / 64),
 									(float) Math.floor((spritePos[1] - 15 + spriteSizeMoving[1]) / 64))
 							.getCollision()) {
-				spritePos[0] -= velocity;
+				
+				if ((kbState[KeyEvent.VK_A] && kbState[KeyEvent.VK_W])
+						|| (kbState[KeyEvent.VK_A] && kbState[KeyEvent.VK_S]))
+					spritePos[0] -= velocity / 2;
+				else
+					spritePos[0] -= velocity;
+
 				if (spritePos[0] < 0)
 					spritePos[0] = 0;
 			} else
@@ -851,7 +934,7 @@ public class DemoGame {
 			projDir = 3;
 		}
 		// move right
-		else if (kbState[KeyEvent.VK_D] && !shinjou.getShooting()) {
+		 if (kbState[KeyEvent.VK_D] && !shinjou.getShooting()) {
 
 			if (!backgroundTiles.getTile((float) Math.floor((spritePos[0] + spriteSizeMoving[0]) / 64),
 					(float) Math.floor((spritePos[1] + 15) / 64)).getCollision()
@@ -861,7 +944,12 @@ public class DemoGame {
 							.getTile((float) Math.floor((spritePos[0] + spriteSizeMoving[0]) / 64),
 									(float) Math.floor((spritePos[1] - 15 + spriteSizeMoving[1]) / 64))
 							.getCollision()) {
-				spritePos[0] += velocity;
+				
+				if((kbState[KeyEvent.VK_D] && kbState[KeyEvent.VK_W]) || (kbState[KeyEvent.VK_D] && kbState[KeyEvent.VK_S]))
+					spritePos[0] += velocity/2;
+				else 
+					spritePos[0] += velocity;
+			
 				if (spritePos[0] > (worldWidth - spriteSizeMoving[0]))
 					spritePos[0] = worldWidth - spriteSizeMoving[0];
 			} else
@@ -876,7 +964,9 @@ public class DemoGame {
 			if (camera.getX() > tileSize[0] * backgroundTiles.getWidth() - screenX)
 				camera.setX(tileSize[0] * backgroundTiles.getWidth() - screenX);
 			projDir = 1;
-		} else if (!shinjou.getShooting()) {
+		} 
+		 if (!shinjou.getShooting() && !kbState[KeyEvent.VK_D] && kbState[KeyEvent.VK_W] 
+				 && kbState[KeyEvent.VK_A] && kbState[KeyEvent.VK_S]) {
 			idleAnimation.updateSprite(deltaTimeMS);
 			shinjou.setCurrentTexture(idleAnimation.getCurrentFrame());
 		}

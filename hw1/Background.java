@@ -14,7 +14,7 @@ class Background
 	// 6 == pavement
 	// 7 - 10 = house
 	// 11 = grassFlower
-	int[] world = { 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,2,
+	int[] worldLevelOne = { 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,2,
 			        1,0,0,0,0,0,0,0,0,7,8,7,8,7,8,0,0,0,0,0,0,0,0,0,0,0,0,3,4,2,
 			        1,0,0,0,0,0,0,0,0,9,10,9,10,9,10,0,0,0,0,0,0,0,0,0,0,0,0,3,4,2,
 			        1,6,6,6,6,6,6,6,6,6,6,6,6,6,6,0,0,0,0,0,0,0,0,0,0,0,0,4,3,1,
@@ -39,46 +39,46 @@ class Background
 			        1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6,0,0,4,3,3,4,0,0,0,0,0,0,1,
 			        1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6,0,0,0,0,0,0,0,0,0,0,0,0,1,
 			        1,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,6,0,0,0,0,0,0,0,0,0,0,0,0,1,
-			        1,0,0,0,0,0,1,5,1,0,0,0,0,0,0,0,6,0,0,0,0,0,0,0,0,0,0,0,0,1,
-			        1,0,0,0,0,0,1,1,1,11,11,0,0,0,0,0,6,0,0,0,0,0,0,0,3,4,3,4,3,1,
-			        1,0,0,0,0,0,0,0,0,11,11,11,0,0,0,0,6,6,6,6,6,6,6,6,4,3,4,3,4,1,
+			        1,0,0,0,0,0,1,5,1,0,0,0,0,0,0,0,6,0,0,0,0,0,0,0,0,0,0,0,0,11,
+			        1,0,0,0,0,0,1,1,1,11,11,0,0,0,0,0,6,0,0,0,0,0,0,0,3,4,3,4,3,4,
+			        1,0,0,0,0,0,0,0,0,11,11,11,0,0,0,0,6,6,6,6,6,6,6,6,6,6,6,6,6,6,
 			        1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,4,3,4,3,1,
 			        1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1 };
 
 	Tile[] tiles;
 	
-	public Background(int[] images, int w, int h)
-	{
+	public Background(int[] images, int w, int h, int level) {
 		width = w;
 		height = h;
-		
+
 		tiles = new Tile[width * height];
-		for (int i = 0; i < tiles.length; i++)
-		{
-			if (world[i] == 0)
-				tiles[i] = new Tile(images[0], false);
-			else if (world[i] == 1)
-				tiles[i] = new Tile(images[1], true);
-			else if (world[i] == 2)
-				tiles[i] = new Tile(images[2], true);
-			else if (world[i] == 3)
-				tiles[i] = new Tile(images[3], false);
-			else if (world[i] == 4)
-				tiles[i] = new Tile(images[4], false);
-			else if (world[i] == 5)
-				tiles[i] = new Tile(images[5], true);
-			else if (world[i] == 6)
-				tiles[i] = new Tile(images[6], false);
-			else if (world[i] == 7)
-				tiles[i] = new Tile(images[7], true);
-			else if (world[i] == 8)
-				tiles[i] = new Tile(images[8], true);
-			else if (world[i] == 9)
-				tiles[i] = new Tile(images[9], true);
-			else if (world[i] == 10)
-				tiles[i] = new Tile(images[10], true);
-			else if (world[i] == 11)
-				tiles[i] = new Tile(images[11], false);
+		if (level == 1) {
+			for (int i = 0; i < tiles.length; i++) {
+				if (worldLevelOne[i] == 0)
+					tiles[i] = new Tile(images[0], false);
+				else if (worldLevelOne[i] == 1)
+					tiles[i] = new Tile(images[1], true);
+				else if (worldLevelOne[i] == 2)
+					tiles[i] = new Tile(images[2], true);
+				else if (worldLevelOne[i] == 3)
+					tiles[i] = new Tile(images[3], false);
+				else if (worldLevelOne[i] == 4)
+					tiles[i] = new Tile(images[4], false);
+				else if (worldLevelOne[i] == 5)
+					tiles[i] = new Tile(images[5], true);
+				else if (worldLevelOne[i] == 6)
+					tiles[i] = new Tile(images[6], false);
+				else if (worldLevelOne[i] == 7)
+					tiles[i] = new Tile(images[7], true);
+				else if (worldLevelOne[i] == 8)
+					tiles[i] = new Tile(images[8], true);
+				else if (worldLevelOne[i] == 9)
+					tiles[i] = new Tile(images[9], true);
+				else if (worldLevelOne[i] == 10)
+					tiles[i] = new Tile(images[10], true);
+				else if (worldLevelOne[i] == 11)
+					tiles[i] = new Tile(images[11], false);
+			}
 		}
 	}
 

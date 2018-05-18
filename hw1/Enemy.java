@@ -13,7 +13,7 @@ public class Enemy extends Character {
 	int mood; // 0 = chase, 1 = runaway, 2 = random;
 	float deltaX, deltaY, v;
 	boolean currDir; // left = false, right = true;
-	boolean collision, busy;
+	boolean collision, busy, droppedFireQuiver;
 
 	float[] target = { -1, -1 };
 
@@ -25,6 +25,7 @@ public class Enemy extends Character {
 		mood = (int) Math.random() * 3;
 		collision = false;
 		busy = false;
+		droppedFireQuiver = false;
 	}
 
 	public Enemy(float x, float y, int width, int height, int tex) {
@@ -204,6 +205,14 @@ public class Enemy extends Character {
 
 	}
 
+	public boolean hasDroppedFireQuiver() {
+		return droppedFireQuiver;
+	}
+
+	public void setDroppedFireQuiver(boolean droppedFireQuiver) {
+		this.droppedFireQuiver = droppedFireQuiver;
+	}
+	
 	public float setVelocity(float dt) {
 
 		return 100 * ((float) dt / 1000);
@@ -218,8 +227,8 @@ public class Enemy extends Character {
 		return currAnimation;
 	}
 
-	public void decHealth() {
-		health -= 1;
+	public void decHealth(int damage) {
+		health -= damage;
 	}
 
 	public boolean isBusy() {

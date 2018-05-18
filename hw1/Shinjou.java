@@ -13,51 +13,47 @@ public class Shinjou extends Character{
 
 	public Shinjou(float x, float y, int width, int height, int tex,  Animation idle, Animation moveLeft, Animation moveRight, Animation attackLeft, Animation attackRight) {
 		super(x, y, width, height, tex);
-		hitbox = new AABBCamera(x + 25, y, width - 50, height);
+		hitbox = new AABBCamera(x + 25, y + 50 , width - 50, height + 50);
 		animationIdle = idle;
 		animationMoveLeft = moveLeft;
 		animationMoveRight = moveRight;
 		animationAttackRight = attackRight;
 		animationAttackLeft = attackLeft;
-		health = 20;
+		health = 20; damage = 1;
 		fireQuiverOn = false;
 	}
 
 	public int hitDetection(ArrayList<Enemy> enemies, int tex) {
 		int tempScore = 0;
 		// Arrow Collision with Enemies
-		ArrayList<Enemy> deadEnemies = new ArrayList<>();
 		for (int i = 0; i < this.getProjectiles().size(); i++) {
 			ArrayList<Projectile> mainProj = (ArrayList<Projectile>) this.getProjectiles();
 			AABBCamera projBox = mainProj.get(i).getCollisionBox();
 			for (Enemy s : enemies) {
-				if (DemoGame.AABBIntersect(projBox, s.getCollisionBox()) && !(i > mainProj.size() - 1)) {
+				if (DemoGame.AABBIntersect(projBox, s.getCollisionBox()) && !(i > mainProj.size() - 1) && s.isAlive()) {
 					mainProj.get(i).setVisible(false);
 					mainProj.remove(i);
-					s.decHealth();
-					if (s instanceof Slime)
+					
+					if (s instanceof Slime) {
 						s.setCurrentTexture(tex);
+						s.decHealth(1);
+					} else
+						s.decHealth(damage);
 
 					if (s.getHealth() < 1) {
 						// enemies.get(j).setAlive(false);
 						s.setAlive(false);
-						deadEnemies.add(s);
 						tempScore += s.getPoints();
 						System.out.println(tempScore);
 						if(s instanceof FireBoar)
 						{
 							double randomNum = Math.random();
-							if (randomNum < .3) {
-								DemoGame.glDrawSprite(DemoGame.gl, DemoGame.fireQuiver, s.x, s.y, DemoGame.projectileQuiver[0], DemoGame.projectileQuiver[1]);
+							if (randomNum < .8) {
+								DemoGame.quiverList.add(new FireQuiver(s.getX(), s.getY(), DemoGame.projectileQuiver[0], DemoGame.projectileQuiver[1]));
 							}
 						}
 					}
 				}
-			}
-		}
-		for (Enemy c : deadEnemies) {
-			if (!c.isAlive()) {
-				enemies.remove(c);
 			}
 		}
 		return tempScore;
