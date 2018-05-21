@@ -159,49 +159,65 @@ public class Enemy extends Character {
 	}
 
 	public void horizontalWallCollision(float v, Background bg) {
+		try {
+			// left collision
+			if (bg.getTile((float) Math.floor((x) / 64), (float) Math.floor(y / 64)).getCollision()
+					|| bg.getTile((float) Math.floor((x) / 64), (float) Math.floor((y + height / 2) / 64))
+							.getCollision()
+					|| bg.getTile((float) Math.floor((x) / 64), (float) Math.floor((y + height) / 64)).getCollision()) {
+				x += v;
+				collision = true;
 
-		// left collision
-		if (bg.getTile((float) Math.floor((x) / 64), (float) Math.floor(y / 64)).getCollision()
-				|| bg.getTile((float) Math.floor((x) / 64), (float) Math.floor((y + height / 2) / 64)).getCollision()
-				|| bg.getTile((float) Math.floor((x) / 64), (float) Math.floor((y + height) / 64)).getCollision()) {
-			x += v;
-			collision = true;
+			}
 
-		}
+			// right collision
+			else if (bg.getTile((float) Math.floor((x + width) / 64), (float) Math.floor(y / 64)).getCollision()
+					|| bg.getTile((float) Math.floor((x + width) / 64), (float) Math.floor((y + height / 2) / 64))
+							.getCollision()
+					|| bg.getTile((float) Math.floor((x + width) / 64), (float) Math.floor((y + height) / 64))
+							.getCollision()) {
 
-		// right collision
-		else if (bg.getTile((float) Math.floor((x + width) / 64), (float) Math.floor(y / 64)).getCollision()
-				|| bg.getTile((float) Math.floor((x + width) / 64), (float) Math.floor((y + height / 2) / 64))
-						.getCollision()
-				|| bg.getTile((float) Math.floor((x + width) / 64), (float) Math.floor((y + height) / 64))
-						.getCollision()) {
-
-			x -= v;
-			collision = true;
+				x -= v;
+				collision = true;
+			}
+		} catch (ArrayIndexOutOfBoundsException e) {
+			this.setY(505);
+			this.setX(385);
+			System.out.println("Exception Caught Horizontally");
 		}
 
 	}
 
 	public void verticalWallCollision(float v, Background bg) {
-		if (y < 0 || y > 1900)
-			setY(64);
-		// top collision
-		if (bg.getTile((float) Math.floor(x / 64), (float) Math.floor(y / 64)).getCollision()
-				|| bg.getTile((float) Math.floor((x + width / 2) / 64), (float) Math.floor(y / 64)).getCollision()
-				|| bg.getTile((float) Math.floor((x + width) / 64), (float) Math.floor(y / 64)).getCollision()) {
-			y += v;
-			collision = true;
+		if (y < 0 || y > 1900) {
+			setX(1597);
+			setY(1427);
 		}
-
-		// down collision
-		else if (bg.getTile((float) Math.floor(x / 64), (float) Math.floor((y + height) / 64)).getCollision()
-				|| bg.getTile((float) Math.floor((x + width / 2) / 64), (float) Math.floor((y + height) / 64))
-						.getCollision()
-				|| bg.getTile((float) Math.floor((x + width) / 64), (float) Math.floor((y + height) / 64))
-						.getCollision()) {
-			y -= v;
-			collision = true;
-		}
+			
+		
+		try {
+			// top collision
+			if (bg.getTile((float) Math.floor(x / 64), (float) Math.floor(y / 64)).getCollision()
+					|| bg.getTile((float) Math.floor((x + width / 2) / 64), (float) Math.floor(y / 64)).getCollision()
+					|| bg.getTile((float) Math.floor((x + width - 15) / 64), (float) Math.floor(y / 64))
+							.getCollision()) {
+				y += v;
+				collision = true;
+			}
+			// down collision
+			else if (bg.getTile((float) Math.floor(x / 64), (float) Math.floor((y + height) / 64)).getCollision()
+					|| bg.getTile((float) Math.floor((x + width / 2) / 64), (float) Math.floor((y + height) / 64))
+							.getCollision()
+					|| bg.getTile((float) Math.floor((x + width) / 64), (float) Math.floor((y + height) / 64))
+							.getCollision()) {
+				y -= v;
+				collision = true;
+			}
+        } catch (ArrayIndexOutOfBoundsException e) {
+        		this.setY(505);
+        		this.setX(385);
+        		System.out.println("Exception Caught Verically");
+        }
 
 	}
 
