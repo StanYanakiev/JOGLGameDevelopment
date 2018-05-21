@@ -41,16 +41,18 @@ public class Shinjou extends Character{
 						s.decHealth(damage);
 
 					if (s.getHealth() < 1) {
-						// enemies.get(j).setAlive(false);
 						s.setAlive(false);
 						tempScore += s.getPoints();
-						System.out.println(tempScore);
-						if(s instanceof FireBoar)
-						{
+						if (s instanceof FireBoar) {
 							double randomNum = Math.random();
-							if (randomNum < .8) {
-								DemoGame.quiverList.add(new FireQuiver(s.getX(), s.getY(), DemoGame.projectileQuiver[0], DemoGame.projectileQuiver[1]));
-							}
+							if (randomNum < .8)
+								DemoGame.quiverList.add(new Item(s.getX(), s.getY(), DemoGame.projectileQuiver[0],
+										DemoGame.projectileQuiver[1]));
+						}
+						if(s instanceof Slime)
+						{
+							DemoGame.healthList.add(new Item(s.getX() + 16, s.getY() + 16, DemoGame.healthSize[0],
+									DemoGame.healthSize[1]));
 						}
 					}
 				}

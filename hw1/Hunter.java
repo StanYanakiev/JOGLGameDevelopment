@@ -13,7 +13,7 @@ public class Hunter extends Enemy{
 		health = 10;
 		chase = 0.80; // 80%
 		runAway = 1; // 20%
-		damage = 5;
+		damage = 4;
 		points = 20;
 	}
 	public void makeDecision() {

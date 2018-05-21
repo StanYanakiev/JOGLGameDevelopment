@@ -1,12 +1,12 @@
 package hw1;
 
-public class FireQuiver {
+public class Item {
 	float x, y;
 	int width, height;
 	AABBCamera hitbox;
 	boolean visible;
 	
-	public FireQuiver(float x, float y, int width, int height){
+	public Item(float x, float y, int width, int height){
 		this.x = x;
 		this.y = y;
 		this.width = width;
