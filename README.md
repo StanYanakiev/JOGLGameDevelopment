@@ -1,4 +1,4 @@
-# JOGLGameDevelopment - READY PLAYER GO 
+# READY PLAYER GO 
 Learning fundamentals for designing a game
 
 Goal:
